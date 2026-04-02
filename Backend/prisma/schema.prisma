@@ -7,11 +7,23 @@ datasource db {
 }
 
 model Producto {
-  id           Int      @id @default(autoincrement())
+  id           Int                    @id @default(autoincrement())
   nombre       String
   categoria    String
   precioCompra Float
   precioVenta  Float
   stock        Int
-  createdAt    DateTime @default(now())
+  createdAt    DateTime               @default(now())
+  movimientos  MovimientoInventario[]
+}
+
+model MovimientoInventario {
+  id              Int      @id @default(autoincrement())
+  tipo            String   // "ENTRADA" | "SALIDA"
+  cantidad        Int
+  stockResultante Int
+  motivo          String?
+  productoId      Int
+  producto        Producto @relation(fields: [productoId], references: [id])
+  createdAt       DateTime @default(now())
 }

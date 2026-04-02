@@ -1,19 +1,12 @@
-import express from 'express'
-import cors from 'cors'
-import productoRoutes from './routes/producto.routes.js'
+import express from "express";
+import productRoutes from "./routes/product.routes.js";
+import inventoryRoutes from "./routes/inventory.routes.js";
 
-const app = express()
+const app = express();
 
-// Middlewares globales
-app.use(cors())
-app.use(express.json())
+app.use(express.json());
 
-// Ruta de prueba
-app.get('/', (req, res) => {
-  res.send('API funcionando 🚀')
-})
+app.use("/api/products", productRoutes);
+app.use("/api/inventory", inventoryRoutes);
 
-// Rutas
-app.use('/productos', productoRoutes)
-
-export default app
+export default app;

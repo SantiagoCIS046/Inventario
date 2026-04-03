@@ -1,15 +1,15 @@
 import { createMovimiento, getKardex } from "../services/inventory.service.js";
 
-export const registrarMovimiento = async (req, res) => {
+export const registrarMovimiento = async (req, res, next) => {
   try {
     const movimiento = await createMovimiento(req.body);
     res.json(movimiento);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    next(error);
   }
 };
 
-export const obtenerKardex = async (req, res) => {
+export const obtenerKardex = async (req, res, next) => {
   try {
     const { productoId, fechaInicio, fechaFin, page = 1, limit = 10 } = req.query;
 
@@ -23,6 +23,6 @@ export const obtenerKardex = async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };

@@ -1,6 +1,6 @@
 import * as reportService from "../services/report.service.js";
 
-export const getDashboard = async (req, res) => {
+export const getDashboard = async (req, res, next) => {
   try {
     const { fechaInicio, fechaFin } = req.query;
 
@@ -12,6 +12,7 @@ export const getDashboard = async (req, res) => {
       productos,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
+

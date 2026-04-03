@@ -1,15 +1,15 @@
 import * as productService from "../services/product.service.js";
 
-export const createProduct = async (req, res) => {
+export const createProduct = async (req, res, next) => {
   try {
     const product = await productService.createProduct(req.body);
     res.json(product);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-export const getProducts = async (req, res) => {
+export const getProducts = async (req, res, next) => {
   try {
     const { page = 1, limit = 10, nombre } = req.query;
 
@@ -21,6 +21,6 @@ export const getProducts = async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };

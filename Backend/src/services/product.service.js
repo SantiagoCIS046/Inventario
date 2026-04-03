@@ -11,6 +11,7 @@ export const getProducts = async ({ page, limit, nombre }) => {
   const { skip, take } = getPagination(page, limit);
 
   const where = {
+    deletedAt: null, // Filtro de Soft Delete
     ...(nombre && {
       nombre: {
         contains: nombre,
@@ -37,4 +38,11 @@ export const getProducts = async ({ page, limit, nombre }) => {
       lastPage: Math.ceil(total / take),
     },
   };
+};
+
+export const deleteProduct = async (id) => {
+  return await prisma.producto.update({
+    where: { id },
+    data: { deletedAt: new Date() },
+  });
 };

@@ -16,3 +16,25 @@ export const getDashboard = async (req, res, next) => {
   }
 };
 
+export const exportVentas = async (req, res, next) => {
+  try {
+    const workbook = await reportService.exportVentasExcel();
+    
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=ventas.xlsx"
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+

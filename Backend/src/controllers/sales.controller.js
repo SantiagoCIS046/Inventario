@@ -1,8 +1,18 @@
 import { createVenta, getVentas } from "../services/sales.service.js";
+import { logAudit } from "../services/audit.service.js";
 
 export const crearVenta = async (req, res, next) => {
   try {
     const venta = await createVenta(req.body.items);
+
+    // Auditoría
+    await logAudit({
+      usuarioId: req.user.id,
+      accion: "CREAR",
+      entidad: "VENTA",
+      entidadId: venta.id,
+    });
+
     res.json(venta);
   } catch (error) {
     next(error);

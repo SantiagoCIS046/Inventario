@@ -28,7 +28,7 @@ export const login = async ({ email, password }) => {
     where: { email },
   });
 
-  if (!user) throw new Error("Usuario no existe");
+  if (!user || user.deletedAt) throw new Error("Usuario no existe o ha sido eliminado");
 
   const isValid = await bcrypt.compare(password, user.password);
 

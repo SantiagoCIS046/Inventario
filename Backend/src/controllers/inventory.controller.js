@@ -1,9 +1,10 @@
 import { createMovimiento, getKardex } from "../services/inventory.service.js";
+import { success } from "../utils/response.js";
 
 export const registrarMovimiento = async (req, res, next) => {
   try {
     const movimiento = await createMovimiento(req.body);
-    res.json(movimiento);
+    return success(res, movimiento, 201);
   } catch (error) {
     next(error);
   }
@@ -21,7 +22,7 @@ export const obtenerKardex = async (req, res, next) => {
       limit: Number(limit)
     });
 
-    res.json(result);
+    return success(res, result);
   } catch (error) {
     next(error);
   }

@@ -1,19 +1,11 @@
 import { createProduct, getProducts, deleteProduct } from "../services/product.service.js";
-import { logAudit } from "../services/audit.service.js";
+import { success } from "../utils/response.js";
 
 export const createProductController = async (req, res, next) => {
   try {
-    const product = await createProduct(req.body);
-
-    // Auditoría
-    await logAudit({
-      usuarioId: req.user.id,
-      accion: "CREAR",
-      entidad: "PRODUCTO",
-      entidadId: product.id,
-    });
-
-    res.json(product);
+    // Pasar req.user.id al servicio para auditoría
+    const product = await createProduct(req.body, req.user.id);
+    return success(res, product, 201);
   } catch (error) {
     next(error);
   }
@@ -29,7 +21,7 @@ export const getProductsController = async (req, res, next) => {
       nombre 
     });
 
-    res.json(result);
+    return success(res, result);
   } catch (error) {
     next(error);
   }
@@ -38,8 +30,9 @@ export const getProductsController = async (req, res, next) => {
 export const borrarProducto = async (req, res, next) => {
   try {
     const { id } = req.params;
-    await deleteProduct(Number(id));
-    res.json({ message: "Producto eliminado correctamente (Soft Delete)" });
+    // Pasar req.user.id al servicio para auditoría
+    await deleteProduct(Number(id), req.user.id);
+    return success(res, { message: "Producto eliminado correctamente (Soft Delete)" });
   } catch (error) {
     next(error);
   }

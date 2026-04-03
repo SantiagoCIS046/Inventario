@@ -1,10 +1,18 @@
 import prisma from "../prisma/client.js";
 import { getPagination } from "../utils/pagination.js";
+import { logAudit } from "./audit.service.js";
 
-export const createProduct = async (data) => {
-  return await prisma.producto.create({
-    data,
+export const createProduct = async (data, userId) => {
+  const product = await prisma.producto.create({ data });
+
+  await logAudit({
+    usuarioId: userId,
+    accion: "CREAR",
+    entidad: "PRODUCTO",
+    entidadId: product.id,
   });
+
+  return product;
 };
 
 export const getProducts = async ({ page, limit, nombre }) => {
@@ -40,9 +48,18 @@ export const getProducts = async ({ page, limit, nombre }) => {
   };
 };
 
-export const deleteProduct = async (id) => {
-  return await prisma.producto.update({
+export const deleteProduct = async (id, userId) => {
+  const product = await prisma.producto.update({
     where: { id },
     data: { deletedAt: new Date() },
   });
+
+  await logAudit({
+    usuarioId: userId,
+    accion: "ELIMINAR",
+    entidad: "PRODUCTO",
+    entidadId: id,
+  });
+
+  return product;
 };

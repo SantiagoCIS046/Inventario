@@ -1,17 +1,21 @@
 import prisma from "../prisma/client.js";
 import { getPagination } from "../utils/pagination.js";
+import { logAudit } from "./audit.service.js";
 
-export const createVenta = async (items) => {
+export const createVenta = async (items, userId) => {
   return await prisma.$transaction(async (tx) => {
     const productIds = items.map(i => i.productoId);
     
     // 1. Obtener todos los productos en una sola consulta
     const dbProducts = await tx.producto.findMany({
-      where: { id: { in: productIds } }
+      where: { 
+        id: { in: productIds },
+        deletedAt: null // Solo productos activos
+      }
     });
 
     if (dbProducts.length !== items.length) {
-      throw new Error("Uno o más productos no existen");
+      throw new Error("Uno o más productos no existen o han sido eliminados");
     }
 
     const productsMap = new Map(dbProducts.map(p => [p.id, p]));
@@ -31,7 +35,15 @@ export const createVenta = async (items) => {
       data: { total },
     });
 
-    // 4. Crear todos los detalles en una sola operación
+    // 4. Auditoría (dentro de la transacción)
+    await logAudit({
+      usuarioId: userId,
+      accion: "CREAR",
+      entidad: "VENTA",
+      entidadId: venta.id,
+    }, tx); // Pasar el contexto de la transacción si logAudit lo soporta (opcional)
+
+    // 5. Crear todos los detalles en una sola operación
     await tx.ventaDetalle.createMany({
       data: items.map(item => ({
         ventaId: venta.id,
@@ -41,7 +53,7 @@ export const createVenta = async (items) => {
       })),
     });
 
-    // 5. Actualizar stock y registrar movimientos en paralelo
+    // 6. Actualizar stock y registrar movimientos en paralelo
     await Promise.all(items.map(async (item) => {
       const product = productsMap.get(item.productoId);
       const nuevoStock = product.stock - item.cantidad;

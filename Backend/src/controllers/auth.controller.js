@@ -1,9 +1,10 @@
 import * as authService from "../services/auth.service.js";
+import { success } from "../utils/response.js";
 
 export const register = async (req, res, next) => {
   try {
     const user = await authService.register(req.body);
-    res.json(user);
+    return success(res, user, 201);
   } catch (error) {
     next(error);
   }
@@ -12,7 +13,7 @@ export const register = async (req, res, next) => {
 export const login = async (req, res, next) => {
   try {
     const data = await authService.login(req.body);
-    res.json(data);
+    return success(res, data);
   } catch (error) {
     next(error);
   }

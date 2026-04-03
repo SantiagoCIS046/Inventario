@@ -5,11 +5,14 @@ export const createMovimiento = async ({ tipo, cantidad, productoId, motivo }) =
   return await prisma.$transaction(async (tx) => {
 
     const producto = await tx.producto.findUnique({
-      where: { id: productoId },
+      where: { 
+        id: productoId,
+        deletedAt: null // Solo productos activos
+      },
     });
 
     if (!producto) {
-      throw new Error("Producto no encontrado");
+      throw new Error("Producto no encontrado o eliminado");
     }
 
     let nuevoStock = producto.stock;
@@ -51,6 +54,9 @@ export const getKardex = async ({ productoId, fechaInicio, fechaFin, page, limit
 
   const where = {
     ...(productoId && { productoId }),
+    producto: {
+      deletedAt: null // Filtrar movimientos de productos eliminados (opcional, según lógica PRO)
+    },
     ...(fechaInicio && fechaFin && {
       createdAt: {
         gte: new Date(fechaInicio),

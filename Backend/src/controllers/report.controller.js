@@ -1,4 +1,5 @@
 import * as reportService from "../services/report.service.js";
+import { success } from "../utils/response.js";
 
 export const getDashboard = async (req, res, next) => {
   try {
@@ -7,7 +8,7 @@ export const getDashboard = async (req, res, next) => {
     const ingresos = await reportService.ingresosTotales(fechaInicio, fechaFin);
     const productos = await reportService.topProductos();
 
-    res.json({
+    return success(res, {
       ingresos,
       productos,
     });
@@ -35,6 +36,3 @@ export const exportVentas = async (req, res, next) => {
     next(error);
   }
 };
-
-
-

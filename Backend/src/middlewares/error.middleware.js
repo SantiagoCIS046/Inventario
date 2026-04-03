@@ -1,7 +1,15 @@
-export const errorHandler = (err, req, res, next) => {
-  console.error(err);
+import { fail } from "../utils/response.js";
+import { logError } from "../utils/logger.js";
 
-  res.status(err.status || 500).json({
-    error: err.message || "Error interno del servidor",
-  });
+export const errorHandler = (err, req, res, next) => {
+  logError(err.message || err);
+
+  const status = err.status || 500;
+
+  // Manejo especial para errores de validación de Zod
+  if (err.name === "ZodError") {
+    return fail(res, err.errors, 400);
+  }
+
+  return fail(res, err.message || "Error interno del servidor", status);
 };

@@ -1,16 +1,15 @@
-function Badge({ children, variant = "default" }) {
-  const variants = {
-    default: "bg-gray-100 text-gray-600",
-    success: "bg-green-100 text-green-700",
-    warning: "bg-amber-100 text-amber-700",
-    error: "bg-red-100 text-red-700",
-    info: "bg-blue-100 text-blue-700",
-    indigo: "bg-indigo-100 text-indigo-700",
+function Badge({ status, label }) {
+  const styles = {
+    "in-stock": "bg-green-50 text-green-600 border-green-100",
+    "low-stock": "bg-red-50 text-red-600 border-red-100",
   };
 
+  const displayText = label || (status === "in-stock" ? "IN STOCK" : "LOW STOCK");
+
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold tracking-wide ${variants[variant] || variants.default}`}>
-      {children}
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black border ${styles[status]}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${status === "in-stock" ? "bg-green-500" : "bg-red-500"}`} />
+      {displayText}
     </span>
   );
 }

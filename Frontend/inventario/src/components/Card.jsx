@@ -1,27 +1,33 @@
-function Card({ title, value, icon, description, trend, color = "blue" }) {
-  const colorClasses = {
-    blue: "bg-blue-50 text-blue-600",
-    green: "bg-green-50 text-green-600",
-    amber: "bg-amber-50 text-amber-600",
-    red: "bg-red-50 text-red-600",
-    indigo: "bg-indigo-50 text-indigo-600",
-  };
+import { TrendingUp, TrendingDown } from "lucide-react";
 
+function Card({ title, value, extra, icon, color = "blue" }) {
+  const isPositive = extra?.startsWith("+");
+  
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col gap-1 hover:shadow-md transition-shadow">
-      <div className="flex justify-between items-start mb-2">
-        <div className={`p-2.5 rounded-lg ${colorClasses[color] || colorClasses.blue}`}>
-          {icon}
+    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-all duration-300 group">
+      <div className="flex justify-between items-start">
+        <div>
+          <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{title}</p>
+          <h2 className="text-3xl font-black text-gray-800 tracking-tight">{value}</h2>
         </div>
-        {trend && (
-          <span className={`text-xs font-medium px-2 py-1 rounded-full ${trend > 0 ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600"}`}>
-            {trend > 0 ? "+" : ""}{trend}%
-          </span>
+        {icon && (
+          <div className="p-3 bg-gray-50 rounded-xl text-gray-400 group-hover:text-blue-600 group-hover:bg-blue-50 transition-colors">
+            {icon}
+          </div>
         )}
       </div>
-      <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">{title}</p>
-      <h3 className="text-2xl font-bold text-gray-800">{value}</h3>
-      {description && <p className="text-xs text-gray-400 mt-1">{description}</p>}
+      
+      {extra && (
+        <div className="mt-4 flex items-center gap-1.5">
+          <span className={`flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold ${
+            isPositive ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600"
+          }`}>
+            {isPositive ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
+            {extra}
+          </span>
+          <span className="text-[10px] text-gray-400 font-medium">vs último mes</span>
+        </div>
+      )}
     </div>
   );
 }

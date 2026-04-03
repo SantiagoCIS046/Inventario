@@ -48,6 +48,22 @@ export const getProducts = async ({ page, limit, nombre }) => {
   };
 };
 
+export const updateProduct = async (id, data, userId) => {
+  const product = await prisma.producto.update({
+    where: { id },
+    data,
+  });
+
+  await logAudit({
+    usuarioId: userId,
+    accion: "ACTUALIZAR",
+    entidad: "PRODUCTO",
+    entidadId: id,
+  });
+
+  return product;
+};
+
 export const deleteProduct = async (id, userId) => {
   const product = await prisma.producto.update({
     where: { id },

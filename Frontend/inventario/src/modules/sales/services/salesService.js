@@ -1,0 +1,16 @@
+import api from "../../../api/axios";
+
+export const createSale = async (data) => {
+  const res = await api.post("/sales", data);
+  return res.data;
+};
+
+export const getSales = async () => {
+  const res = await api.get("/sales");
+  return res.data;
+};
+
+export const getSaleById = async (id) => {
+  const res = await api.get(`/sales/${id}`);
+  return res.data;
+};

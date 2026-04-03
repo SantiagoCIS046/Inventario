@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, Save, Camera, Barcode } from "lucide-react";
 
-function ProductForm({ onSubmit, onClose }) {
+function ProductForm({ onClose, onSubmit, product }) {
   const [form, setForm] = useState({
     nombre: "",
     categoria: "",
@@ -10,106 +10,184 @@ function ProductForm({ onSubmit, onClose }) {
     stock: "",
   });
 
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (product) {
+      setForm({
+        nombre: product.nombre || "",
+        categoria: product.categoria || "",
+        precioCompra: product.precioCompra || "",
+        precioVenta: product.precioVenta || "",
+        stock: product.stock || "",
+      });
+    }
+  }, [product]);
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: "" });
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!form.nombre.trim()) newErrors.nombre = "El nombre es requerido";
+    if (!form.categoria) newErrors.categoria = "Selecciona una categoría";
+    if (!form.precioVenta || Number(form.precioVenta) <= 0) newErrors.precioVenta = "Ingresa un precio válido";
+    if (!form.stock || Number(form.stock) < 0) newErrors.stock = "Ingresa un stock válido";
+    return newErrors;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
     onSubmit({
       nombre: form.nombre,
       categoria: form.categoria,
-      precioCompra: parseFloat(form.precioCompra),
+      precioCompra: parseFloat(form.precioCompra) || 0,
       precioVenta: parseFloat(form.precioVenta),
       stock: parseInt(form.stock),
     });
   };
 
+  const categories = ["Electrónica", "Ropa", "Calzado", "Accesorios", "Hogar", "Alimentos", "Otros"];
+
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
-        >
-          <X size={20} />
-        </button>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative animate-in fade-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-8 pb-2">
+          <button
+            onClick={onClose}
+            className="absolute top-6 right-6 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer"
+          >
+            <X size={20} />
+          </button>
 
-        <h2 className="text-xl font-bold text-gray-800 mb-6">Nuevo Producto</h2>
+          <h2 className="text-2xl font-black text-gray-900 tracking-tight">
+            {product ? "Editar Producto" : "Nuevo Producto"}
+          </h2>
+          <p className="text-sm text-gray-400 font-medium mt-1">
+            {product ? "Modifica los detalles del producto existente." : "Ingresa los detalles para el nuevo registro de inventario."}
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="p-8 pt-6 space-y-5">
           <div>
-            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Nombre</label>
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.15em]">Product Name</label>
+              <span className="text-[10px] font-black text-red-500 uppercase tracking-wider">Required</span>
+            </div>
             <input
               name="nombre"
               value={form.nombre}
               onChange={handleChange}
-              required
-              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all"
-              placeholder="Ej: Camisa Oxford"
+              placeholder="e.g. Wireless Ergonomic Keyboard"
+              className={`w-full bg-gray-50 border ${errors.nombre ? 'border-red-300 ring-2 ring-red-50' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 transition-all`}
             />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Categoría</label>
-            <input
-              name="categoria"
-              value={form.categoria}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all"
-              placeholder="Ej: Ropa"
-            />
+            {errors.nombre && <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">⊘ {errors.nombre}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Precio Compra</label>
-              <input
-                name="precioCompra"
-                type="number"
-                step="0.01"
-                value={form.precioCompra}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all"
-                placeholder="0.00"
-              />
+              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-2">SKU</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-300">
+                  <Barcode size={16} />
+                </span>
+                <input
+                  name="sku"
+                  value={product ? `SKU-${String(product.id).padStart(4, '0')}` : `INV-PR-${String(Math.floor(Math.random() * 999)).padStart(3, '0')}`}
+                  disabled
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm text-gray-400 font-mono cursor-not-allowed"
+                />
+              </div>
             </div>
+
             <div>
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Precio Venta</label>
+              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-2">Category</label>
+              <select
+                name="categoria"
+                value={form.categoria}
+                onChange={handleChange}
+                className={`w-full bg-gray-50 border ${errors.categoria ? 'border-red-300' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm text-gray-700 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 cursor-pointer appearance-none transition-all`}
+                style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 14px center" }}
+              >
+                <option value="">Seleccionar...</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+              {errors.categoria && <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">⊘ {errors.categoria}</p>}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-2">Price ($)</label>
               <input
                 name="precioVenta"
                 type="number"
                 step="0.01"
+                min="0"
                 value={form.precioVenta}
                 onChange={handleChange}
-                required
-                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all"
                 placeholder="0.00"
+                className={`w-full bg-gray-50 border ${errors.precioVenta ? 'border-red-300 ring-2 ring-red-50' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 transition-all`}
               />
+              {errors.precioVenta && <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">⊘ {errors.precioVenta}</p>}
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-2">Stock</label>
+              <input
+                name="stock"
+                type="number"
+                min="0"
+                value={form.stock}
+                onChange={handleChange}
+                placeholder="0"
+                className={`w-full bg-gray-50 border ${errors.stock ? 'border-red-300 ring-2 ring-red-50' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 transition-all`}
+              />
+              {errors.stock && <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">⊘ {errors.stock}</p>}
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Stock Inicial</label>
-            <input
-              name="stock"
-              type="number"
-              value={form.stock}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all"
-              placeholder="0"
-            />
+            <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-2">Product Image (Optional)</label>
+            <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-blue-300 hover:bg-blue-50/30 transition-all cursor-pointer group">
+              <div className="w-12 h-12 mx-auto bg-blue-50 rounded-xl flex items-center justify-center text-blue-500 mb-3 group-hover:scale-110 transition-transform">
+                <Camera size={24} />
+              </div>
+              <p className="text-sm text-gray-500 font-semibold">Click to upload or drag and drop</p>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">PNG, JPG or WEBP (Max. 5MB)</p>
+            </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-blue-200 transition-all cursor-pointer mt-2"
-          >
-            Guardar Producto
-          </button>
+          <div className="flex justify-end gap-4 pt-4 border-t border-gray-100">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-3 text-sm font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-colors cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-blue-200 transition-all hover:scale-105 cursor-pointer"
+            >
+              <Save size={16} />
+              {product ? "Actualizar" : "Guardar"}
+            </button>
+          </div>
         </form>
       </div>
     </div>

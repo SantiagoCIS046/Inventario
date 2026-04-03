@@ -1,4 +1,4 @@
-import { createProduct, getProducts, deleteProduct } from "../services/product.service.js";
+import { createProduct, getProducts, updateProduct, deleteProduct } from "../services/product.service.js";
 import { success } from "../utils/response.js";
 
 export const createProductController = async (req, res, next) => {
@@ -22,6 +22,16 @@ export const getProductsController = async (req, res, next) => {
     });
 
     return success(res, result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateProductController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const product = await updateProduct(Number(id), req.body, req.user.id);
+    return success(res, product);
   } catch (error) {
     next(error);
   }

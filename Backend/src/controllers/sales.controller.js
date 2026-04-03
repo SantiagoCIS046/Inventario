@@ -1,4 +1,4 @@
-import { createVenta, getVentas } from "../services/sales.service.js";
+import { createVenta, getVentas, getVentaById } from "../services/sales.service.js";
 import { success } from "../utils/response.js";
 
 export const crearVenta = async (req, res, next) => {
@@ -21,6 +21,15 @@ export const obtenerVentas = async (req, res, next) => {
     });
 
     return success(res, result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const obtenerVentaPorId = async (req, res, next) => {
+  try {
+    const venta = await getVentaById(req.params.id);
+    return success(res, venta);
   } catch (error) {
     next(error);
   }

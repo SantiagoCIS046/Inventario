@@ -1,112 +1,145 @@
-import Card from "../components/Card";
-import Table from "../components/Table";
-import ProgressBar from "../components/ProgressBar";
-import { 
-  DollarSign, 
-  Package, 
-  ShoppingCart, 
-  Plus, 
-  Zap,
-  TrendingUp,
-  Book
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import api from "../api/axios";
+import StatCard from "../modules/reports/components/StatCard";
+import SalesChart from "../modules/reports/components/VentasChart";
+import RecentSales from "../modules/reports/components/RecentSales";
+import StockAlerts from "../modules/reports/components/StockAlerts";
+import { Plus, Filter, Calendar, Diamond } from "lucide-react";
 
 function Dashboard() {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.get("/reports/dashboard").then(res => {
+      setStats(res.data.data);
+      setLoading(false);
+    }).catch(err => {
+      console.error("Error fetching dashboard stats", err);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-[60vh] animate-pulse">
+       <Diamond size={48} className="text-indigo-200 animate-spin" />
+    </div>
+  );
+
   return (
-    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000 pb-20">
       
       {/* Header section with Action Button */}
-      <div className="flex justify-between items-end">
-        <div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tight">Visión General</h1>
-          <p className="text-gray-500 font-medium mt-1">Análisis en tiempo real de tu inventario editorial y flujo comercial.</p>
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 px-2">
+        <div className="space-y-1">
+          <h1 className="text-4xl font-black text-gray-900 tracking-tight">Bienvenido de vuelta, Admin</h1>
+          <p className="text-gray-400 font-bold text-[10px] uppercase tracking-[0.2em]">Aquí está lo que ha pasado en tu editorial hoy.</p>
         </div>
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-2xl font-black text-sm flex items-center gap-2 shadow-xl shadow-blue-200 transition-all hover:scale-105 cursor-pointer">
-          <Plus size={20} />
-          Nuevo Registro
-        </button>
+        
+        <div className="flex items-center gap-4">
+           <div className="hidden md:flex items-center gap-2 bg-white border border-gray-100 p-2 pl-4 rounded-2xl shadow-sm">
+              <Calendar size={16} className="text-gray-300" />
+              <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-2 pr-4 border-r border-gray-100">Últimos 30 días</span>
+              <button className="p-2 hover:bg-gray-50 rounded-xl transition-all cursor-pointer">
+                 <Filter size={16} className="text-indigo-600" />
+              </button>
+           </div>
+           
+           <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-black text-sm flex items-center gap-2 shadow-2xl shadow-indigo-100 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer">
+              <Plus size={20} />
+              New Entry
+           </button>
+        </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <Card 
-          title="Total Sales" 
-          value="$ 45,230" 
-          extra="+12%" 
-          icon={<DollarSign size={20} />} 
-          color="blue"
-        />
-        <Card 
-          title="Inventory Items" 
-          value="1,240" 
-          extra="15 low stock" 
-          icon={<Package size={20} />} 
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+        <StatCard 
+          title="Ventas Totales" 
+          value={`$${stats?.summary.ventasHoy.toLocaleString()}`} 
+          trend={12.5} 
+          type="ventas" 
           color="indigo"
+          subtitle="Crecimiento diario"
         />
-        <Card 
-          title="Recent Orders" 
-          value="128" 
-          extra="Registradas hoy" 
-          icon={<ShoppingCart size={20} />} 
-          color="purple"
+        <StatCard 
+          title="Pedidos Pendientes" 
+          value={`${stats?.summary.cantidadHoy} items`} 
+          type="facturas" 
+          color="amber"
+          subtitle="Requieren atención inmediata"
+        />
+        <StatCard 
+          title="Stock Crítico" 
+          value={`${stats?.lowStock.length} items`} 
+          type="stock" 
+          color="red"
+          subtitle="Bajo el umbral mínimo"
+        />
+        <StatCard 
+          title="Ingresos Mensuales" 
+          value={`$${stats?.summary.ventasMes.toLocaleString()}`} 
+          trend={2.1} 
+          type="ingresos" 
+          color="green"
+          subtitle="Octubre 2024"
         />
       </div>
 
-      {/* Main Content Area: Table */}
-      <Table />
+      {/* Charts & Category Distribution Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+         <div className="lg:col-span-2">
+            <SalesChart data={stats?.chartData} />
+         </div>
 
-      {/* Bottom Insights Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Distribution Analysis */}
-        <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-1.5 h-full bg-blue-600" />
-          <div className="flex justify-between items-center mb-8">
-            <h3 className="font-black text-lg text-gray-800">Análisis de Distribución</h3>
-            <Zap size={20} className="text-blue-500" />
-          </div>
-          
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-gray-400">
-                <span>Ficción</span>
-                <span>62%</span>
-              </div>
-              <ProgressBar value={62} />
+         <div className="bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-sm flex flex-col space-y-8">
+            <div>
+               <h3 className="text-xl font-black text-gray-900 tracking-tight">Categorías Populares</h3>
+               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Top 4 categorías por volumen</p>
             </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-gray-400">
-                <span>Académico</span>
-                <span>28%</span>
-              </div>
-              <ProgressBar value={28} />
+            
+            <div className="space-y-8 flex-1">
+               {[
+                 { label: "Ficción Contemporánea", value: 38, color: "bg-indigo-600" },
+                 { label: "No Ficción / Biografías", value: 26, color: "bg-indigo-400" },
+                 { label: "Infantil y Juvenil", value: 18, color: "bg-amber-500" },
+                 { label: "Académico y Técnico", value: 12, color: "bg-gray-300" }
+               ].map((cat, i) => (
+                 <div key={i} className="space-y-3">
+                    <div className="flex justify-between text-xs font-black text-gray-800">
+                       <span className="tracking-tight">{cat.label}</span>
+                       <span className="text-indigo-600">{cat.value}%</span>
+                    </div>
+                    <div className="h-2 w-full bg-gray-50 rounded-full overflow-hidden border border-gray-100">
+                       <div 
+                         className={`h-full ${cat.color} rounded-full transition-all duration-1000 delay-300`} 
+                         style={{ width: `${cat.value}%` }}
+                       />
+                    </div>
+                 </div>
+               ))}
             </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-gray-400">
-                <span>Infantil</span>
-                <span>10%</span>
-              </div>
-              <ProgressBar value={10} />
-            </div>
-          </div>
-        </div>
 
-        {/* Stock Optimization */}
-        <div className="bg-blue-50/50 p-8 rounded-3xl border border-blue-100 shadow-sm flex flex-col justify-between">
-          <div>
-            <h3 className="font-black text-lg text-gray-800 mb-4">Optimización de Stock</h3>
-            <p className="text-gray-500 text-sm leading-relaxed">
-              Basado en tendencias de ventas de la última temporada, recomendamos reabastecer 
-              <span className="text-blue-600 font-bold"> 4 títulos clave </span> 
-              antes de fin de mes para evitar roturas de stock.
-            </p>
-          </div>
-          
-          <button className="flex items-center gap-2 text-blue-600 font-black text-sm group cursor-pointer mt-8">
-            Ver recomendaciones detalladas
-            <TrendingUp size={16} className="group-hover:translate-x-1 transition-transform" />
-          </button>
-        </div>
+            <div className="mt-auto bg-indigo-50/50 p-6 rounded-3xl border border-indigo-50 relative overflow-hidden group">
+               <div className="absolute top-0 right-0 p-4 opacity-10">
+                  <Diamond size={48} className="text-indigo-600 group-hover:rotate-12 transition-transform duration-500" />
+               </div>
+               <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-2">Insight Editorial</p>
+               <p className="text-[11px] font-bold text-indigo-900 leading-relaxed italic">
+                 "La categoría de Ficción ha subido un 8% tras el lanzamiento del Bestseller de Verano."
+               </p>
+            </div>
+         </div>
       </div>
+
+      {/* Transactions & Alerts Table Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+         <div className="lg:col-span-2 flex flex-col">
+            <RecentSales sales={stats?.recentSales} />
+         </div>
+         <StockAlerts items={stats?.lowStock} />
+      </div>
+
     </div>
   );
 }

@@ -1,0 +1,11 @@
+{
+  "name": "epicure-pro-enterprise",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix Frontend/inventario",
+    "backend": "npm start --prefix Backend",
+    "frontend": "npm run dev --prefix Frontend/inventario",
+    "install-all": "npm install --prefix Backend && npm install --prefix Frontend/inventario"
+  }
+}

@@ -3,6 +3,10 @@ import { getPagination } from "../utils/pagination.js";
 import { logAudit } from "./audit.service.js";
 
 export const createVenta = async (items, userId) => {
+  if (!items || items.length === 0) {
+    throw new Error("La venta debe tener al menos un producto");
+  }
+
   return await prisma.$transaction(async (tx) => {
     const productIds = items.map(i => i.productoId);
     
@@ -100,4 +104,23 @@ export const getVentas = async ({ page, limit }) => {
       lastPage: Math.ceil(total / take),
     },
   };
+};
+
+export const getVentaById = async (id) => {
+  const venta = await prisma.venta.findUnique({
+    where: { id: Number(id) },
+    include: {
+      detalles: {
+        include: {
+          producto: true
+        }
+      }
+    }
+  });
+
+  if (!venta) {
+    throw new Error("Venta no encontrada");
+  }
+
+  return venta;
 };

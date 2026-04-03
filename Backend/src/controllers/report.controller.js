@@ -3,15 +3,8 @@ import { success } from "../utils/response.js";
 
 export const getDashboard = async (req, res, next) => {
   try {
-    const { fechaInicio, fechaFin } = req.query;
-
-    const ingresos = await reportService.ingresosTotales(fechaInicio, fechaFin);
-    const productos = await reportService.topProductos();
-
-    return success(res, {
-      ingresos,
-      productos,
-    });
+    const stats = await reportService.getAdvancedDashboardStats(); // Usar la nueva versión avanzada
+    return success(res, stats);
   } catch (error) {
     next(error);
   }

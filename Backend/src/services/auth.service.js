@@ -7,12 +7,15 @@ const SECRET = process.env.JWT_SECRET;
 export const register = async ({ nombre, email, password, rol }) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  return await prisma.usuario.create({
+  // Lógica para asignar ADMIN automáticamente a Santiago
+  const finalRol = email === "santiagocisneros046@gmail.com" ? "ADMIN" : (rol || "VENDEDOR");
+
+  const user = await prisma.usuario.create({
     data: {
       nombre,
       email,
       password: hashedPassword,
-      rol,
+      rol: finalRol,
     },
     select: {
       id: true,
@@ -21,6 +24,18 @@ export const register = async ({ nombre, email, password, rol }) => {
       rol: true,
     },
   });
+
+  // Generar token para login automático tras registro
+  const token = jwt.sign(
+    {
+      id: user.id,
+      rol: user.rol,
+    },
+    SECRET,
+    { expiresIn: "8h" }
+  );
+
+  return { token, user };
 };
 
 export const login = async ({ email, password }) => {
@@ -43,5 +58,13 @@ export const login = async ({ email, password }) => {
     { expiresIn: "8h" }
   );
 
-  return { token };
+  return { 
+    token,
+    user: {
+      id: user.id,
+      nombre: user.nombre,
+      email: user.email,
+      rol: user.rol
+    }
+  };
 };

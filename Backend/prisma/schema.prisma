@@ -46,3 +46,12 @@ model VentaDetalle {
   venta      Venta    @relation(fields: [ventaId], references: [id])
   producto   Producto @relation(fields: [productoId], references: [id])
 }
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  email     String   @unique
+  password  String
+  rol       String   // "ADMIN" | "VENDEDOR"
+  createdAt DateTime @default(now())
+}

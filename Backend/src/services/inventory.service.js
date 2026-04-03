@@ -1,4 +1,5 @@
 import prisma from "../prisma/client.js";
+import { getPagination } from "../utils/pagination.js";
 
 export const createMovimiento = async ({ tipo, cantidad, productoId, motivo }) => {
   return await prisma.$transaction(async (tx) => {
@@ -45,23 +46,36 @@ export const createMovimiento = async ({ tipo, cantidad, productoId, motivo }) =
   });
 };
 
-export const getKardex = async ({ productoId, fechaInicio, fechaFin }) => {
-  return await prisma.movimientoInventario.findMany({
-    where: {
-      ...(productoId && { productoId }),
+export const getKardex = async ({ productoId, fechaInicio, fechaFin, page, limit }) => {
+  const { skip, take } = getPagination(page, limit);
 
-      ...(fechaInicio && fechaFin && {
-        createdAt: {
-          gte: new Date(fechaInicio),
-          lte: new Date(fechaFin),
-        },
-      }),
+  const where = {
+    ...(productoId && { productoId }),
+    ...(fechaInicio && fechaFin && {
+      createdAt: {
+        gte: new Date(fechaInicio),
+        lte: new Date(fechaFin),
+      },
+    }),
+  };
+
+  const [data, total] = await Promise.all([
+    prisma.movimientoInventario.findMany({
+      where,
+      include: { producto: true },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take,
+    }),
+    prisma.movimientoInventario.count({ where }),
+  ]);
+
+  return {
+    data,
+    meta: {
+      total,
+      page: Number(page),
+      lastPage: Math.ceil(total / take),
     },
-    include: {
-      producto: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  };
 };

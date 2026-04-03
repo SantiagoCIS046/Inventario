@@ -53,16 +53,16 @@ export const topProductos = async () => {
     take: 5,
   });
 
-  return await Promise.all(
-    data.map(async (item) => {
-      const producto = await prisma.producto.findUnique({
-        where: { id: item.productoId },
-      });
+  const productIds = data.map(item => item.productoId);
+  const products = await prisma.producto.findMany({
+    where: { id: { in: productIds } },
+    select: { id: true, nombre: true }
+  });
 
-      return {
-        producto: producto.nombre,
-        totalVendido: item._sum.cantidad,
-      };
-    })
-  );
+  const productsMap = new Map(products.map(p => [p.id, p]));
+
+  return data.map(item => ({
+    producto: productsMap.get(item.productoId)?.nombre || "Producto no encontrado",
+    totalVendido: item._sum.cantidad,
+  }));
 };

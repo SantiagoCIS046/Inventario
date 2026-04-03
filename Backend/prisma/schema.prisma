@@ -16,6 +16,8 @@ model Producto {
   createdAt    DateTime               @default(now())
   movimientos  MovimientoInventario[]
   ventas       VentaDetalle[]
+
+  @@index([createdAt])
 }
 
 model MovimientoInventario {
@@ -27,6 +29,9 @@ model MovimientoInventario {
   productoId      Int
   producto        Producto @relation(fields: [productoId], references: [id])
   createdAt       DateTime @default(now())
+
+  @@index([productoId])
+  @@index([createdAt])
 }
 
 model Venta {
@@ -34,6 +39,8 @@ model Venta {
   total     Float
   createdAt DateTime      @default(now())
   detalles  VentaDetalle[]
+
+  @@index([createdAt])
 }
 
 model VentaDetalle {
@@ -45,6 +52,9 @@ model VentaDetalle {
 
   venta      Venta    @relation(fields: [ventaId], references: [id])
   producto   Producto @relation(fields: [productoId], references: [id])
+
+  @@index([ventaId])
+  @@index([productoId])
 }
 
 model Usuario {

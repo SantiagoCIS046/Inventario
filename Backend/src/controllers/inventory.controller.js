@@ -11,15 +11,17 @@ export const registrarMovimiento = async (req, res) => {
 
 export const obtenerKardex = async (req, res) => {
   try {
-    const { productoId, fechaInicio, fechaFin } = req.query;
+    const { productoId, fechaInicio, fechaFin, page = 1, limit = 10 } = req.query;
 
-    const kardex = await getKardex({
+    const result = await getKardex({
       productoId: productoId ? Number(productoId) : undefined,
       fechaInicio,
       fechaFin,
+      page: Number(page),
+      limit: Number(limit)
     });
 
-    res.json(kardex);
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

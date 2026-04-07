@@ -4,14 +4,14 @@ function Card({ title, value, extra, icon, color = "blue" }) {
   const isPositive = extra?.startsWith("+");
   
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-all duration-300 group">
+    <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-200/60 flex flex-col justify-between hover:shadow-md transition-all duration-300 group">
       <div className="flex justify-between items-start">
         <div>
           <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{title}</p>
           <h2 className="text-3xl font-black text-gray-800 tracking-tight">{value}</h2>
         </div>
         {icon && (
-          <div className="p-3 bg-gray-50 rounded-xl text-gray-400 group-hover:text-blue-600 group-hover:bg-blue-50 transition-colors">
+          <div className="p-2.5 bg-gray-50 rounded-xl text-gray-400 group-hover:text-blue-600 group-hover:bg-blue-50 transition-colors">
             {icon}
           </div>
         )}

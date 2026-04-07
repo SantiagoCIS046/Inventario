@@ -1,51 +1,41 @@
 import { create } from "zustand";
-import axios from "axios";
+import { persist } from "zustand/middleware";
+import api from "../api/axios";
 
-export const useAuthStore = create((set) => ({
-  user: JSON.parse(localStorage.getItem("user")) || null,
-  token: localStorage.getItem("token") || null,
+export const useAuthStore = create(
+  persist(
+    (set) => ({
+      user: null,
+      token: null,
 
-  login: async (email, password) => {
-    try {
-      const res = await axios.post("http://localhost:3000/api/auth/login", {
-        email,
-        password,
-      });
+      login: async (email, password) => {
+        try {
+          const res = await api.post("/auth/login", { email, password });
+          const { token, user } = res.data.data;
+          set({ user, token });
+        } catch (error) {
+          console.error("Error login", error);
+          throw error;
+        }
+      },
 
-      // Nuestro backend devuelve { success: true, data: { token, user } }
-      const { token, user } = res.data.data;
+      register: async (nombre, email, password) => {
+        try {
+          const res = await api.post("/auth/register", { nombre, email, password });
+          const { token, user } = res.data.data;
+          set({ user, token });
+        } catch (error) {
+          console.error("Error register", error);
+          throw error;
+        }
+      },
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      set({ user, token });
-    } catch (error) {
-      console.error("Error login", error);
-      throw error;
+      logout: () => {
+        set({ user: null, token: null });
+      },
+    }),
+    {
+      name: "auth-storage", // Nombre de la llave en localStorage
     }
-  },
-
-  register: async (nombre, email, password) => {
-    try {
-      const res = await axios.post("http://localhost:3000/api/auth/register", {
-        nombre,
-        email,
-        password,
-      });
-
-      const { token, user } = res.data.data;
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-      set({ user, token });
-    } catch (error) {
-      console.error("Error register", error);
-      throw error;
-    }
-  },
-
-  logout: () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    set({ user: null, token: null });
-  },
-}));
+  )
+);

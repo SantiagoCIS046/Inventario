@@ -3,18 +3,18 @@ import InventoryRowPro from "./InventoryRowPro";
 
 export default function InventoryTablePro({ products, onEdit, onDelete }) {
   return (
-    <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
             <tr className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] bg-gray-50/30 border-b border-gray-50">
-              <th className="px-8 py-5">Producto</th>
-              <th className="px-6 py-5">SKU</th>
-              <th className="px-6 py-5 text-center">Categoría</th>
-              <th className="px-6 py-5 text-center">Precio</th>
-              <th className="px-6 py-5">Stock Actual</th>
-              <th className="px-6 py-5 text-center">Estado</th>
-              <th className="px-6 py-5 text-right">Acciones</th>
+              <th className="px-6 py-3">Producto</th>
+              <th className="px-4 py-3">SKU</th>
+              <th className="px-4 py-3 text-center">Categoría</th>
+              <th className="px-4 py-3 text-center">Precio</th>
+              <th className="px-4 py-3">Stock Actual</th>
+              <th className="px-4 py-3 text-center">Estado</th>
+              <th className="px-4 py-3 text-right">Acciones</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
@@ -40,7 +40,7 @@ export default function InventoryTablePro({ products, onEdit, onDelete }) {
       </div>
       
       {/* Pagination Mockup (as in design) */}
-      <div className="p-8 border-t border-gray-50 flex items-center justify-between">
+      <div className="p-4 border-t border-gray-50 flex items-center justify-between">
          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
             Mostrando {products.length} de {products.length * 10} productos
          </p>

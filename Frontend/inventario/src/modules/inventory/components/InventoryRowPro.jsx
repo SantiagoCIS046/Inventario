@@ -11,10 +11,10 @@ export default function InventoryRowPro({ product, onEdit, onDelete }) {
 
   return (
     <tr className="group hover:bg-gray-50/50 transition-all border-b border-gray-50">
-      <td className="px-6 py-6">
+      <td className="px-4 py-3">
         <div className="flex items-center gap-4">
-          <div className="h-14 w-14 bg-gray-50 rounded-2xl flex items-center justify-center border border-gray-100 flex-shrink-0 group-hover:scale-105 transition-transform overflow-hidden grayscale opacity-70">
-            <span className="text-2xl">👕</span>
+          <div className="h-10 w-10 bg-gray-50 rounded-xl flex items-center justify-center border border-gray-100 flex-shrink-0 group-hover:scale-105 transition-transform overflow-hidden grayscale opacity-70">
+            <span className="text-xl">👕</span>
           </div>
           <div>
             <p className="text-[13px] font-black text-gray-900 leading-tight tracking-tight uppercase">{product.nombre}</p>
@@ -33,7 +33,7 @@ export default function InventoryRowPro({ product, onEdit, onDelete }) {
       <td className="px-6 py-6 text-sm font-black text-gray-900 tracking-tighter text-center">
         ${(product?.precioVenta || 0).toLocaleString()}
       </td>
-      <td className="px-6 py-6 min-w-[180px]">
+      <td className="px-4 py-3 min-w-[180px]">
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-end">
             <span className={`text-[11px] font-black ${isLowStock ? "text-red-500" : "text-gray-900"}`}>

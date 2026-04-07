@@ -76,18 +76,18 @@ function InventoryPage() {
   };
 
   return (
-    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-1000 pb-20">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-6 duration-1000 pb-20">
       
       {/* Header PRO */}
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 px-4">
-        <div className="space-y-2">
-          <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Gestión de Inventario Pro</h1>
-          <p className="text-gray-400 font-bold text-[10px] uppercase tracking-[0.3em]">Visualización editorial de productos y existencias globales.</p>
+        <div className="space-y-1">
+          <h1 className="text-2xl font-black text-gray-900 tracking-tighter">Gestión de Inventario Pro</h1>
+          <p className="text-gray-400 font-bold text-[9px] uppercase tracking-[0.2em]">Visualización editorial de productos y existencias globales.</p>
         </div>
         
         <button 
           onClick={() => { setSelectedProduct(null); setShowForm(true); }}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-10 py-5 rounded-3xl font-black text-xs uppercase tracking-widest flex items-center gap-3 shadow-2xl shadow-indigo-100 transition-all hover:scale-[1.03] active:scale-95 cursor-pointer"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-3 shadow-xl shadow-indigo-100 transition-all hover:scale-[1.03] active:scale-95 cursor-pointer"
         >
           <Plus size={20} />
           Nuevo Producto
@@ -95,13 +95,13 @@ function InventoryPage() {
       </div>
 
       {/* Control Bar (As in Image) */}
-      <div className="bg-white p-6 rounded-[2.5rem] border border-gray-100 shadow-sm flex flex-col lg:flex-row items-center gap-6">
+      <div className="bg-white p-4 rounded-[1.5rem] border border-gray-200/60 shadow-sm flex flex-col lg:flex-row items-center gap-4">
          <div className="flex-1 w-full relative">
             <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300" size={20} />
             <input 
                type="text" 
                placeholder="Buscar por nombre, SKU o etiqueta..."
-               className="w-full bg-gray-50 border-none rounded-2xl py-5 pl-16 pr-6 text-sm font-bold text-gray-700 placeholder:text-gray-300 focus:ring-4 focus:ring-indigo-100 transition-all"
+               className="w-full bg-gray-50 border-none rounded-xl py-3 pl-14 pr-4 text-sm font-bold text-gray-700 placeholder:text-gray-300 focus:ring-4 focus:ring-indigo-100 transition-all"
                value={filters.search}
                onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
             />
@@ -110,7 +110,7 @@ function InventoryPage() {
          <div className="flex items-center gap-4 w-full lg:w-auto">
             <div className="relative group w-full lg:w-64">
                <select 
-                  className="w-full appearance-none bg-gray-50 border-none rounded-2xl py-5 px-8 text-xs font-black text-gray-600 uppercase tracking-widest cursor-pointer pr-12 focus:ring-4 focus:ring-indigo-100"
+                  className="w-full appearance-none bg-gray-50 border-none rounded-xl py-3 px-6 text-[11px] font-black text-gray-600 uppercase tracking-widest cursor-pointer pr-10 focus:ring-4 focus:ring-indigo-100"
                   onChange={(e) => setFilters(prev => ({...prev, category: e.target.value}))}
                   value={filters.category}
                >
@@ -124,7 +124,7 @@ function InventoryPage() {
 
             <div className="relative group w-full lg:w-64">
                <select 
-                  className="w-full appearance-none bg-gray-50 border-none rounded-2xl py-5 px-8 text-xs font-black text-gray-600 uppercase tracking-widest cursor-pointer pr-12 focus:ring-4 focus:ring-indigo-100"
+                  className="w-full appearance-none bg-gray-50 border-none rounded-xl py-3 px-6 text-[11px] font-black text-gray-600 uppercase tracking-widest cursor-pointer pr-10 focus:ring-4 focus:ring-indigo-100"
                   onChange={(e) => setFilters(prev => ({...prev, status: e.target.value}))}
                   value={filters.status}
                >
@@ -135,7 +135,7 @@ function InventoryPage() {
                <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={16} />
             </div>
 
-            <button className="p-5 bg-gray-50 text-gray-400 rounded-2xl hover:bg-indigo-50 hover:text-indigo-600 transition-all cursor-pointer">
+            <button className="p-3 bg-gray-50 text-gray-400 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 transition-all cursor-pointer">
                <LayoutGrid size={20} />
             </button>
          </div>

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { User, Lock, ArrowRight, AlertCircle, ShieldCheck, Eye, EyeOff, UserPlus } from "lucide-react";
+import bgImage from "../assets/bg_login.png";
+import Alert from "../components/Alert";
 
 function Login() {
   const { login } = useAuthStore();
@@ -43,34 +45,36 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8faff] p-6 animate-in fade-in duration-700">
-      <div className="mb-8 flex flex-col items-center">
-        <div className="h-14 w-14 bg-[#4338ca] rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-100 mb-4 animate-bounce">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 animate-in fade-in duration-700 relative overflow-hidden">
+      {/* Background Image with Dark Overlay */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-all duration-1000"
+        style={{ backgroundImage: `url(${bgImage})` }}
+      />
+      <div className="absolute inset-0 z-0 bg-black/40" />
+
+      <div className="mb-4 flex flex-col items-center relative z-10">
+        <div className="h-14 w-14 bg-[#4338ca] rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-500/40 mb-2 animate-bounce">
           {isRegister ? <UserPlus size={32} /> : <ShieldCheck size={32} />}
         </div>
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight">
+        <h1 className="text-3xl font-black text-white tracking-tight drop-shadow-lg">
           {isRegister ? "Crear Cuenta" : "Iniciar sesión"}
         </h1>
-        <p className="text-gray-400 text-sm font-semibold mt-1">
+        <p className="text-gray-200 text-sm font-semibold mt-1 drop-shadow-md">
           {isRegister ? "Únete a la arquitectura editorial" : "Gestiona la arquitectura de tu empresa"}
         </p>
       </div>
 
-      <div className="w-full max-w-md">
-        {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-xl animate-in slide-in-from-top-2 duration-300 flex items-center gap-3">
-            <AlertCircle className="text-red-500" size={20} />
-            <p className="text-xs font-bold text-red-700 leading-tight">{error}</p>
-          </div>
-        )}
+      <div className="w-full max-w-sm relative z-10">
+        <Alert type="danger" message={error} className="mb-4" />
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-10 rounded-3xl border border-gray-100 shadow-2xl shadow-gray-200/50 space-y-6"
+          className="bg-black/20 backdrop-blur-xl p-6 rounded-3xl border border-white/10 shadow-2xl shadow-black/40 space-y-4"
         >
           {isRegister && (
             <div className="animate-in slide-in-from-top-2 duration-300">
-              <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2.5">
+              <label className="block text-[10px] font-black text-gray-200 uppercase tracking-widest mb-2.5">
                 Nombre Completo
               </label>
               <div className="relative group">
@@ -80,9 +84,9 @@ function Login() {
                   placeholder="Juan Pérez"
                   onChange={handleChange}
                   required
-                  className="w-full bg-gray-50 border border-transparent rounded-2xl pl-5 pr-12 py-3.5 text-sm text-gray-700 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50/50 transition-all font-medium"
+                  className="w-full bg-white/10 border border-white/5 rounded-2xl pl-4 pr-10 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:bg-white/20 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/20 transition-all font-medium"
                 />
-                <span className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-300 group-focus-within:text-indigo-500 transition-colors">
+                <span className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 group-focus-within:text-white transition-colors">
                   <User size={18} />
                 </span>
               </div>
@@ -90,7 +94,7 @@ function Login() {
           )}
 
           <div>
-            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2.5">
+            <label className="block text-[10px] font-black text-gray-200 uppercase tracking-widest mb-2.5">
               Correo Electrónico
             </label>
             <div className="relative group">
@@ -99,10 +103,9 @@ function Login() {
                 type="email"
                 placeholder="correo@ejemplo.com"
                 onChange={handleChange}
-                required
-                className="w-full bg-gray-50 border border-transparent rounded-2xl pl-5 pr-12 py-3.5 text-sm text-gray-700 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50/50 transition-all font-medium"
+                className="w-full bg-white/10 border border-white/5 rounded-2xl pl-4 pr-10 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:bg-white/20 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/20 transition-all font-medium"
               />
-              <span className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-300 group-focus-within:text-indigo-500 transition-colors">
+              <span className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 group-focus-within:text-white transition-colors">
                 <User size={18} />
               </span>
             </div>
@@ -110,11 +113,11 @@ function Login() {
 
           <div>
             <div className="flex justify-between items-center mb-2.5">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+              <label className="text-[10px] font-black text-gray-200 uppercase tracking-widest">
                 Contraseña
               </label>
               {!isRegister && (
-                <button type="button" className="text-[10px] font-black text-indigo-500 uppercase tracking-tighter hover:underline cursor-pointer">
+                <button type="button" className="text-[10px] font-black text-indigo-300 uppercase tracking-tighter hover:underline cursor-pointer transition-colors">
                   ¿Olvidaste tu contraseña?
                 </button>
               )}
@@ -126,12 +129,12 @@ function Login() {
                 placeholder="••••••••"
                 onChange={handleChange}
                 required
-                className="w-full bg-gray-50 border border-transparent rounded-2xl pl-5 pr-12 py-3.5 text-sm text-gray-700 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50/50 transition-all font-medium font-mono"
+                className="w-full bg-white/10 border border-white/5 rounded-2xl pl-4 pr-10 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:bg-white/20 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/20 transition-all font-medium font-mono tracking-widest"
               />
               <button 
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-300 hover:text-indigo-500 transition-colors cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-white transition-colors cursor-pointer"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -142,9 +145,9 @@ function Login() {
             <input 
               type="checkbox" 
               id="remember"
-              className="w-5 h-5 rounded-lg border-gray-200 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+              className="w-4 h-4 rounded border-white/20 bg-white/10 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
             />
-            <label htmlFor="remember" className="text-xs font-bold text-gray-400 cursor-pointer hover:text-gray-600 transition-colors">
+            <label htmlFor="remember" className="text-xs font-bold text-gray-300 cursor-pointer hover:text-white transition-colors">
               Recordarme en este dispositivo
             </label>
           </div>
@@ -152,18 +155,18 @@ function Login() {
           <button 
             type="submit"
             disabled={loading}
-            className="w-full bg-[#4338ca] hover:bg-[#3730a3] text-white py-4 rounded-3xl font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-indigo-200 transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-2xl font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20 transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? (isRegister ? "Creando cuenta..." : "Iniciando sesión...") : (isRegister ? "Registrarse" : "Ingresar")}
             {!loading && <ArrowRight size={18} />}
           </button>
 
-          <p className="text-center text-xs font-bold text-gray-400 pt-4">
+          <p className="text-center text-xs font-bold text-gray-400 pt-2">
             {isRegister ? "¿Ya tienes una cuenta?" : "¿Nuevo en la plataforma?"}{" "}
             <button 
               type="button" 
               onClick={() => { setIsRegister(!isRegister); setError(""); }}
-              className="text-indigo-500 hover:underline cursor-pointer"
+              className="text-indigo-300 hover:underline cursor-pointer"
             >
               {isRegister ? "Inicia sesión aquí" : "Crea una cuenta corporativa"}
             </button>
@@ -171,17 +174,7 @@ function Login() {
         </form>
       </div>
 
-      <div className="mt-12 text-center">
-        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-10">Editorial Architect ERP • V4.2.0</p>
-        
-        <div className="flex items-center gap-8 text-[11px] font-bold text-gray-400 mb-8">
-          <span className="cursor-pointer hover:text-gray-600 transition-colors">Privacy Policy</span>
-          <span className="cursor-pointer hover:text-gray-600 transition-colors">Terms of Service</span>
-          <span className="cursor-pointer hover:text-gray-600 transition-colors">Support</span>
-        </div>
 
-        <p className="text-[11px] text-gray-400">© 2026 Editorial Architect ERP. All rights reserved.</p>
-      </div>
     </div>
   );
 }

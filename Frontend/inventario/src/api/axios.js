@@ -5,10 +5,20 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  try {
+    const authStorage = localStorage.getItem("auth-storage");
+    if (!authStorage) return config;
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    const parsed = JSON.parse(authStorage);
+    const token = parsed?.state?.token;
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  } catch (error) {
+    console.error("Error al leer el token de seguridad:", error);
+    // Si los datos están corruptos, limpiamos para prevenir el bloqueo
+    localStorage.removeItem("auth-storage");
   }
 
   return config;

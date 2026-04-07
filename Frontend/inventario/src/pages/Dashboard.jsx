@@ -16,6 +16,10 @@ function Dashboard() {
       setLoading(false);
     }).catch(err => {
       console.error("Error fetching dashboard stats", err);
+      if (err.response?.status === 401) {
+        console.warn("Sesión no autorizada o expirada. Redirigiendo...");
+        // Opcional: window.location.href = "/login";
+      }
       setLoading(false);
     });
   }, []);
@@ -56,7 +60,7 @@ function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
         <StatCard 
           title="Ventas Totales" 
-          value={`$${stats?.summary.ventasHoy.toLocaleString()}`} 
+          value={`$${stats?.summary?.ventasHoy?.toLocaleString() || '0'}`} 
           trend={12.5} 
           type="ventas" 
           color="indigo"
@@ -64,21 +68,21 @@ function Dashboard() {
         />
         <StatCard 
           title="Pedidos Pendientes" 
-          value={`${stats?.summary.cantidadHoy} items`} 
+          value={`${stats?.summary?.cantidadHoy || 0} items`} 
           type="facturas" 
           color="amber"
           subtitle="Requieren atención inmediata"
         />
         <StatCard 
           title="Stock Crítico" 
-          value={`${stats?.lowStock.length} items`} 
+          value={`${stats?.lowStock?.length || 0} items`} 
           type="stock" 
           color="red"
           subtitle="Bajo el umbral mínimo"
         />
         <StatCard 
           title="Ingresos Mensuales" 
-          value={`$${stats?.summary.ventasMes.toLocaleString()}`} 
+          value={`$${stats?.summary?.ventasMes?.toLocaleString() || '0'}`} 
           trend={2.1} 
           type="ingresos" 
           color="green"

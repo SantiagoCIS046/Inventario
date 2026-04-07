@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useUserStore } from "../../../store/useUserStore";
 import { User, Mail, Lock, Shield, X, AlertCircle } from "lucide-react";
+import Alert from "../../../components/Alert";
 
 function UserForm({ user, onClose }) {
   const { addUser, editUser } = useUserStore();

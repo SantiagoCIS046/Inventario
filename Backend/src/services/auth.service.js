@@ -4,7 +4,28 @@ import jwt from "jsonwebtoken";
 
 const SECRET = process.env.JWT_SECRET;
 
+if (!SECRET) {
+  console.error("❌ CRITICAL ERROR: JWT_SECRET is not defined in environment variables");
+  throw new Error("Configuración del servidor incompleta");
+}
+
 export const register = async ({ nombre, email, password, rol }) => {
+  if (!nombre || !email || !password) {
+    const error = new Error("Nombre, email y contraseña son obligatorios");
+    error.status = 400;
+    throw error;
+  }
+
+  const existingUser = await prisma.usuario.findUnique({
+    where: { email },
+  });
+
+  if (existingUser) {
+    const error = new Error("El correo electrónico ya está registrado");
+    error.status = 400;
+    throw error;
+  }
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Lógica para asignar ADMIN automáticamente a Santiago
@@ -43,11 +64,19 @@ export const login = async ({ email, password }) => {
     where: { email },
   });
 
-  if (!user || user.deletedAt) throw new Error("Usuario no existe o ha sido eliminado");
+  if (!user || (user.deletedAt && user.deletedAt !== null)) {
+    const error = new Error("Usuario no existe o ha sido eliminado");
+    error.status = 401;
+    throw error;
+  }
 
   const isValid = await bcrypt.compare(password, user.password);
 
-  if (!isValid) throw new Error("Contraseña incorrecta");
+  if (!isValid) {
+    const error = new Error("Contraseña incorrecta");
+    error.status = 401;
+    throw error;
+  }
 
   const token = jwt.sign(
     {

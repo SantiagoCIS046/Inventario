@@ -10,13 +10,13 @@ import {
   Printer,
   ArrowRight
 } from "lucide-react";
-import { useState } from "react";
-import Receipt from "./Receipt";
+import Alert from "../../../components/Alert";
 
 function Cart() {
   const { cart, total, checkout, removeFromCart } = useSalesStore();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("EFECTIVO");
   const [showReceipt, setShowReceipt] = useState(false);
   const [lastSale, setLastSale] = useState(null);
@@ -30,7 +30,8 @@ function Cart() {
     // Validación de stock antes de vender
     const itemSinStock = cart.find(item => item.stock < item.quantity);
     if (itemSinStock) {
-      alert(`No hay suficiente stock para "${itemSinStock.nombre}". \nDisponibles: ${itemSinStock.stock} unidades.`);
+      setError(`No hay suficiente stock para "${itemSinStock.nombre}". Disponibles: ${itemSinStock.stock}`);
+      setTimeout(() => setError(""), 5000);
       return;
     }
 
@@ -47,7 +48,8 @@ function Cart() {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (error) {
-      alert("Error al procesar la venta. Verifique el stock.");
+      setError("Error al procesar la venta. Verifique el stock.");
+      setTimeout(() => setError(""), 5000);
     } finally {
       setLoading(false);
     }
@@ -95,6 +97,10 @@ function Cart() {
       </div>
 
       {/* Cart Content */}
+      <div className="px-8 pb-2">
+        <Alert type="danger" message={error} />
+      </div>
+
       <div className="flex-1 overflow-y-auto p-8 pt-4 space-y-4 custom-scrollbar">
         {cart.length > 0 ? (
           cart.map(item => (

@@ -17,6 +17,7 @@ import {
   Banknote
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Alert from "../../../components/Alert";
 
 export default function CreateInvoice() {
   const [products, setProducts] = useState([]);
@@ -25,6 +26,7 @@ export default function CreateInvoice() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("EFECTIVO");
+  const [error, setError] = useState("");
   
   const navigate = useNavigate();
 
@@ -64,7 +66,8 @@ export default function CreateInvoice() {
 
   const handleSubmit = async () => {
     if (cart.length === 0) {
-      alert("Por favor, agrega al menos un producto al carrito");
+      setError("Por favor, agrega al menos un producto al carrito");
+      setTimeout(() => setError(""), 5000);
       return;
     }
     setLoading(true);
@@ -83,8 +86,9 @@ export default function CreateInvoice() {
       // Redirigir al detalle de la factura recién creada
       const invoiceId = res.data?.id || res.id;
       setTimeout(() => navigate(`/invoices/${invoiceId}`), 1500);
-    } catch (error) {
-      alert("Error al crear factura. Verifique el stock.");
+    } catch (err) {
+      setError("Error al crear factura. Verifique el stock o la conexión.");
+      setTimeout(() => setError(""), 5000);
     } finally {
       setLoading(false);
     }
@@ -115,7 +119,10 @@ export default function CreateInvoice() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="px-4">
+          <Alert type="danger" message={error} />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         
         {/* Left Col: Products */}
         <div className="lg:col-span-8 space-y-8">

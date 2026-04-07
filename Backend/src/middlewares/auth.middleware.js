@@ -4,17 +4,22 @@ const SECRET = process.env.JWT_SECRET;
 
 export const verifyToken = (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
+    const authHeader = req.headers.authorization;
 
-    if (!token) throw new Error("No autorizado");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "No autorizado: Token mal formado o inexistente" });
+    }
+
+    const token = authHeader.split(" ")[1];
 
     const decoded = jwt.verify(token, SECRET);
-
     req.user = decoded;
-
     next();
   } catch (error) {
-    res.status(401).json({ error: "Token inválido" });
+    const message = error.name === "TokenExpiredError" 
+      ? "Sesión expirada" 
+      : "Token inválido";
+    res.status(401).json({ error: message });
   }
 };
 

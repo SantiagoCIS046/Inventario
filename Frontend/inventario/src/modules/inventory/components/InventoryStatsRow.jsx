@@ -3,10 +3,10 @@ import { DollarSign, AlertCircle, ShoppingBag, Package } from "lucide-react";
 
 export default function InventoryStatsRow({ totalValue, lowStockCount, totalItems }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {/* Valor Total */}
-      <div className="bg-indigo-50/30 p-8 rounded-[2.5rem] border border-indigo-100 flex items-center gap-6 group hover:scale-[1.02] transition-all">
-         <div className="h-16 w-16 bg-white rounded-3xl flex items-center justify-center text-indigo-600 border border-indigo-100 shadow-sm shadow-indigo-100/50">
+      <div className="bg-indigo-50/30 p-4 rounded-2xl border border-indigo-100 flex items-center gap-4 group hover:scale-[1.02] transition-all">
+         <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-indigo-600 border border-indigo-100 shadow-sm shadow-indigo-100/50">
             <DollarSign size={24} />
          </div>
          <div>
@@ -18,8 +18,8 @@ export default function InventoryStatsRow({ totalValue, lowStockCount, totalItem
       </div>
 
       {/* Items Bajos */}
-      <div className="bg-amber-50/30 p-8 rounded-[2.5rem] border border-amber-100 flex items-center gap-6 group hover:scale-[1.02] transition-all">
-         <div className="h-16 w-16 bg-white rounded-3xl flex items-center justify-center text-amber-600 border border-amber-100 shadow-sm shadow-amber-100/50">
+      <div className="bg-amber-50/30 p-4 rounded-2xl border border-amber-100 flex items-center gap-4 group hover:scale-[1.02] transition-all">
+         <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-amber-600 border border-amber-100 shadow-sm shadow-amber-100/50">
             <AlertCircle size={24} />
          </div>
          <div>
@@ -29,8 +29,8 @@ export default function InventoryStatsRow({ totalValue, lowStockCount, totalItem
       </div>
 
       {/* Nuevos Ingresos */}
-      <div className="bg-emerald-50/30 p-8 rounded-[2.5rem] border border-emerald-100 flex items-center gap-6 group hover:scale-[1.02] transition-all">
-         <div className="h-16 w-16 bg-white rounded-3xl flex items-center justify-center text-emerald-600 border border-emerald-100 shadow-sm shadow-emerald-100/50">
+      <div className="bg-emerald-50/30 p-4 rounded-2xl border border-emerald-100 flex items-center gap-4 group hover:scale-[1.02] transition-all">
+         <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-emerald-600 border border-emerald-100 shadow-sm shadow-emerald-100/50">
             <Package size={24} />
          </div>
          <div>
@@ -40,8 +40,8 @@ export default function InventoryStatsRow({ totalValue, lowStockCount, totalItem
       </div>
 
       {/* Inventory Health (New Card) */}
-      <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm flex items-center gap-6 group hover:scale-[1.02] transition-all">
-         <div className="h-16 w-16 bg-gray-50 rounded-3xl flex items-center justify-center text-gray-400 border border-gray-50">
+      <div className="bg-white p-4 rounded-2xl border border-gray-200/60 shadow-sm flex items-center gap-4 group hover:scale-[1.02] transition-all">
+         <div className="h-10 w-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 border border-gray-50">
             <ShoppingBag size={24} />
          </div>
          <div>

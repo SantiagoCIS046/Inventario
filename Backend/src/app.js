@@ -11,8 +11,13 @@ import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
 
+// Configuración de orígenes permitidos (CORS)
+const allowedOrigins = process.env.FRONTEND_URL 
+  ? process.env.FRONTEND_URL.split(',') 
+  : [/^http:\/\/localhost(:\d+)?$/];
+
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: allowedOrigins,
   credentials: true
 }));
 app.use(express.json());

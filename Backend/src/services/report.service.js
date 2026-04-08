@@ -70,6 +70,9 @@ export const topProductos = async () => {
 
 export const getAdvancedDashboardStats = async () => {
   const now = new Date();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const lastWeek = new Date();
   lastWeek.setDate(now.getDate() - 7);
 
@@ -80,7 +83,7 @@ export const getAdvancedDashboardStats = async () => {
   lastMonth.setDate(now.getDate() - 30);
 
   // 1. Promesas en paralelo para velocidad
-  const [currentWeekSales, previousWeekSales, invoices, productsWithSales, totalIncomeMonth] = await Promise.all([
+  const [currentWeekSales, previousWeekSales, invoices, productsWithSales, totalIncomeMonth, todaySales] = await Promise.all([
     // Ventas últimos 7 días
     prisma.venta.aggregate({
       _sum: { total: true },
@@ -108,6 +111,11 @@ export const getAdvancedDashboardStats = async () => {
     prisma.venta.aggregate({
       _sum: { total: true },
       where: { createdAt: { gte: new Date(now.getFullYear(), now.getMonth(), 1) } }
+    }),
+    // Ventas de hoy
+    prisma.venta.aggregate({
+      _sum: { total: true },
+      where: { createdAt: { gte: today } }
     })
   ]);
 
@@ -180,6 +188,7 @@ export const getAdvancedDashboardStats = async () => {
 
   return {
     metrics: {
+      todaySales: todaySales._sum.total || 0,
       weeklySales: currentTotal,
       growth,
       avgTicket,

@@ -13,6 +13,7 @@ model Producto {
   precioCompra Float
   precioVenta  Float
   stock        Int
+  talla        String?                // Nuevo campo para tallas (calzado/ropa)
   createdAt    DateTime               @default(now())
   deletedAt    DateTime?
   movimientos  MovimientoInventario[]

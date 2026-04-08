@@ -10,6 +10,8 @@ import PredictiveDashboard from "./modules/reports/pages/PredictiveDashboard";
 import SalesPage from "./modules/sales/pages/SalesPage";
 import SalesHistoryPage from "./modules/sales/pages/SalesHistoryPage";
 import ReportsPage from "./modules/reports/pages/ReportsPage";
+import SuppliersPage from "./modules/suppliers/pages/SuppliersPage";
+import MarketingPage from "./modules/marketing/pages/MarketingPage";
 import UsersPage from "./modules/users/pages/UsersPage";
 import PrivateRoute from "./routes/PrivateRoute";
 import RoleRoute from "./routes/RoleRoute";
@@ -94,6 +96,39 @@ function App() {
             <PrivateRoute>
               <MainLayout>
                 <PredictiveDashboard />
+              </MainLayout>
+            </PrivateRoute>
+          } 
+        />
+
+        <Route 
+          path="/reports" 
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <ReportsPage />
+              </MainLayout>
+            </PrivateRoute>
+          } 
+        />
+
+        <Route 
+          path="/suppliers" 
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <SuppliersPage />
+              </MainLayout>
+            </PrivateRoute>
+          } 
+        />
+
+        <Route 
+          path="/marketing" 
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <MarketingPage />
               </MainLayout>
             </PrivateRoute>
           } 

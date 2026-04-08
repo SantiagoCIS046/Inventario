@@ -7,7 +7,7 @@ export default function InventoryTablePro({ products, onEdit, onDelete }) {
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
-            <tr className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] bg-gray-50/30 border-b border-gray-50">
+            <tr className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] bg-gray-50/40 border-b border-gray-100">
               <th className="px-6 py-3">Producto</th>
               <th className="px-4 py-3">SKU</th>
               <th className="px-4 py-3 text-center">Categoría</th>

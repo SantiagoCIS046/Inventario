@@ -29,7 +29,7 @@ export default function PredictiveDashboard() {
      <div className="min-h-screen flex items-center justify-center bg-gray-50/30">
         <div className="flex flex-col items-center gap-4">
            <Diamond className="text-indigo-600 animate-spin" size={48} />
-           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Loading Intelligence...</p>
+           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Cargando Inteligencia Artificial...</p>
         </div>
      </div>
   );
@@ -40,7 +40,7 @@ export default function PredictiveDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-4">
          <div className="space-y-1">
             <h1 className="text-5xl font-black text-gray-900 tracking-tighter">StitchLogic AI</h1>
-            <p className="text-gray-400 font-bold text-xs uppercase tracking-[0.2em]">Enterprise Business Intelligence Tier v2.4</p>
+            <p className="text-gray-400 font-bold text-xs uppercase tracking-[0.2em]">Nivel de Inteligencia de Negocios stitchlogic v2.4</p>
          </div>
          <div className="flex items-center gap-6">
             <div className="flex -space-x-4">
@@ -106,7 +106,7 @@ export default function PredictiveDashboard() {
                </div>
 
                <div className="h-[400px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                     <AreaChart data={data?.chartData}>
                       <defs>
                         <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">

@@ -37,7 +37,7 @@ function Dashboard() {
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 px-2">
         <div className="space-y-1">
           <h1 className="text-4xl font-black text-gray-900 tracking-tight">Bienvenido de vuelta, Admin</h1>
-          <p className="text-gray-400 font-bold text-[10px] uppercase tracking-[0.2em]">Aquí está lo que ha pasado en tu editorial hoy.</p>
+          <p className="text-gray-400 font-bold text-[10px] uppercase tracking-[0.2em]">Aquí está lo que ha pasado en tu tienda hoy.</p>
         </div>
         
         <div className="flex items-center gap-4">
@@ -104,10 +104,10 @@ function Dashboard() {
             
             <div className="space-y-8 flex-1">
                {[
-                 { label: "Ficción Contemporánea", value: 38, color: "bg-indigo-600" },
-                 { label: "No Ficción / Biografías", value: 26, color: "bg-indigo-400" },
-                 { label: "Infantil y Juvenil", value: 18, color: "bg-amber-500" },
-                 { label: "Académico y Técnico", value: 12, color: "bg-gray-300" }
+                 { label: "Camisas & Polos", value: 38, color: "bg-indigo-600" },
+                 { label: "Jeans & Cargo", value: 26, color: "bg-indigo-400" },
+                 { label: "Oversize / Urban", value: 18, color: "bg-amber-500" },
+                 { label: "Calzado & Gorras", value: 12, color: "bg-gray-300" }
                ].map((cat, i) => (
                  <div key={i} className="space-y-3">
                     <div className="flex justify-between text-xs font-black text-gray-800">
@@ -128,9 +128,9 @@ function Dashboard() {
                <div className="absolute top-0 right-0 p-4 opacity-10">
                   <Diamond size={48} className="text-indigo-600 group-hover:rotate-12 transition-transform duration-500" />
                </div>
-               <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-2">Insight Editorial</p>
+               <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-2">Insight de Moda</p>
                <p className="text-[11px] font-bold text-indigo-900 leading-relaxed italic">
-                 "La categoría de Ficción ha subido un 8% tras el lanzamiento del Bestseller de Verano."
+                 "La categoría Oversize ha subido un 15% tras el lanzamiento de la nueva colección urbana."
                </p>
             </div>
          </div>

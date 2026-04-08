@@ -8,6 +8,7 @@ function ProductForm({ onClose, onSubmit, product }) {
     precioCompra: "",
     precioVenta: "",
     stock: "",
+    talla: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -20,6 +21,7 @@ function ProductForm({ onClose, onSubmit, product }) {
         precioCompra: product.precioCompra || "",
         precioVenta: product.precioVenta || "",
         stock: product.stock || "",
+        talla: product.talla || "",
       });
     }
   }, [product]);
@@ -53,10 +55,24 @@ function ProductForm({ onClose, onSubmit, product }) {
       precioCompra: parseFloat(form.precioCompra) || 0,
       precioVenta: parseFloat(form.precioVenta),
       stock: parseInt(form.stock),
+      talla: form.talla,
     });
   };
 
-  const categories = ["Electrónica", "Ropa", "Calzado", "Accesorios", "Hogar", "Alimentos", "Otros"];
+  const categories = ["Camisas", "Oversize", "Jeans", "Cargo", "Pantalonetas", "Shorts", "Zapatos", "Gorras", "Polos", "Otros"];
+
+  const TALLAS_SUPERIOR = ["S", "M", "L", "XL", "XXL"];
+  const TALLAS_INFERIOR = ["28", "30", "32", "34", "36", "38", "40"];
+  const TALLAS_CALZADO = ["34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45"];
+
+  const getTallasDisponibles = () => {
+    if (["Camisas", "Polos", "Oversize"].includes(form.categoria)) return TALLAS_SUPERIOR;
+    if (["Jeans", "Cargo", "Pantalonetas", "Shorts"].includes(form.categoria)) return TALLAS_INFERIOR;
+    if (form.categoria === "Zapatos") return TALLAS_CALZADO;
+    return null;
+  };
+
+  const tallasDisponibles = getTallasDisponibles();
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
@@ -90,7 +106,7 @@ function ProductForm({ onClose, onSubmit, product }) {
               name="nombre"
               value={form.nombre}
               onChange={handleChange}
-              placeholder="e.g. Wireless Ergonomic Keyboard"
+              placeholder="Ej: Camisa Slim Fit Negra"
               className={`w-full bg-gray-50 border ${errors.nombre ? 'border-red-300 ring-2 ring-red-50' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 transition-all`}
             />
             {errors.nombre && <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">⊘ {errors.nombre}</p>}
@@ -129,6 +145,28 @@ function ProductForm({ onClose, onSubmit, product }) {
               {errors.categoria && <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">⊘ {errors.categoria}</p>}
             </div>
           </div>
+
+          {tallasDisponibles && (
+            <div className="animate-in slide-in-from-top-2 duration-300">
+               <label className="block text-[10px] font-black text-blue-600 uppercase tracking-[0.15em] mb-3">Seleccionar Talla / Medida</label>
+               <div className="flex flex-wrap gap-2">
+                  {tallasDisponibles.map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setForm({ ...form, talla: t })}
+                      className={`h-10 min-w-[3rem] px-3 rounded-xl text-[11px] font-black transition-all border-2 ${
+                        form.talla === t 
+                          ? "bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-100" 
+                          : "bg-white border-gray-100 text-gray-500 hover:border-blue-200"
+                      }`}
+                    >
+                      {form.categoria === "Zapatos" ? `Talla ${t}` : t}
+                    </button>
+                  ))}
+               </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-4">
             <div>

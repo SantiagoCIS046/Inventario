@@ -21,12 +21,12 @@ function Sidebar() {
   const location = useLocation();
 
   const menuItems = [
-    { icon: <Package size={20} />, label: "Inventory", path: "/inventory" },
-    { icon: <Activity size={20} />, label: "Predictive Sales", path: "/predictive-sales" },
-    { icon: <BarChart3 size={20} />, label: "Analytics", path: "/reports" },
-    { icon: <Truck size={20} />, label: "Suppliers", path: "/suppliers" },
-    { icon: <Users size={20} />, label: "Staffing", path: "/users" },
-    { icon: <Megaphone size={20} />, label: "Marketing", path: "/marketing" },
+    { icon: <Package size={20} />, label: "Inventario", path: "/inventory" },
+    { icon: <Activity size={20} />, label: "Ventas Predictivas", path: "/predictive-sales" },
+    { icon: <BarChart3 size={20} />, label: "Análisis y Reportes", path: "/reports" },
+    { icon: <Truck size={20} />, label: "Proveedores", path: "/suppliers" },
+    { icon: <Users size={20} />, label: "Gestión de Personal", path: "/users" },
+    { icon: <Megaphone size={20} />, label: "Marketing Digital", path: "/marketing" },
   ];
 
   return (
@@ -39,7 +39,7 @@ function Sidebar() {
           </div>
           <div>
             <span className="text-xl font-black text-indigo-900 tracking-tighter block leading-none">StitchLogic</span>
-            <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest mt-1 block">Enterprise Tier</span>
+            <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest mt-1 block">Nivel Empresarial</span>
           </div>
         </div>
 
@@ -82,18 +82,18 @@ function Sidebar() {
       {/* Footer Actions */}
       <div className="p-5 space-y-4">
          <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-indigo-100 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer">
-            Generate Report
+            Generar Reporte
          </button>
          
          <div className="space-y-4 pt-4 border-t border-gray-50">
             <button className="w-full flex items-center gap-3 px-6 py-2 text-gray-400 hover:text-gray-600 transition-all font-bold text-xs uppercase tracking-widest cursor-pointer">
-              <HelpCircle size={16} /> Help Center
+              <HelpCircle size={16} /> Centro de Ayuda
             </button>
             <button
                onClick={logout}
                className="w-full flex items-center gap-3 px-6 py-2 text-gray-400 hover:text-red-500 transition-all font-bold text-xs uppercase tracking-widest cursor-pointer"
             >
-               <LogOut size={16} /> Logout
+               <LogOut size={16} /> Cerrar Sesión
             </button>
          </div>
       </div>

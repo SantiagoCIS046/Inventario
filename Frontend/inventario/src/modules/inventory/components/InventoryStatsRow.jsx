@@ -34,7 +34,7 @@ export default function InventoryStatsRow({ totalValue, lowStockCount, totalItem
             <Package size={24} />
          </div>
          <div>
-            <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest leading-none">Total Items</p>
+            <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest leading-none">Total de Referencias</p>
             <h4 className="text-2xl font-black text-emerald-900 tracking-tighter mt-1">{totalItems} Hoy</h4>
          </div>
       </div>
@@ -45,7 +45,7 @@ export default function InventoryStatsRow({ totalValue, lowStockCount, totalItem
             <ShoppingBag size={24} />
          </div>
          <div>
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Salud Stock</p>
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Salud del Stock</p>
             <h4 className="text-2xl font-black text-gray-900 tracking-tighter mt-1">94%</h4>
          </div>
       </div>

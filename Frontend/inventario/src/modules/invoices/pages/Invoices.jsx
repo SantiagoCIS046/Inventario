@@ -47,11 +47,11 @@ export default function Invoices() {
         <table className="w-full text-left">
           <thead>
             <tr className="bg-gray-50/50 border-b border-gray-50">
-              <th className="px-10 py-7 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Referencia</th>
-              <th className="px-10 py-7 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Fecha Emisión</th>
-              <th className="px-10 py-7 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] text-center">Estado</th>
-              <th className="px-10 py-7 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Monto Total</th>
-              <th className="px-10 py-7 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] text-right">Acción</th>
+              <th className="px-10 py-7 text-[10px] font-black text-gray-600 uppercase tracking-[0.2em]">Referencia</th>
+              <th className="px-10 py-7 text-[10px] font-black text-gray-600 uppercase tracking-[0.2em]">Fecha Emisión</th>
+              <th className="px-10 py-7 text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] text-center">Estado</th>
+              <th className="px-10 py-7 text-[10px] font-black text-gray-600 uppercase tracking-[0.2em]">Monto Total</th>
+              <th className="px-10 py-7 text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] text-right">Acción</th>
             </tr>
           </thead>
 

@@ -15,11 +15,11 @@ function UsersTable({ users, onEdit }) {
       <table className="w-full text-left">
         <thead>
           <tr className="bg-gray-50/50 border-b border-gray-50">
-            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Nombre</th>
-            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Email</th>
-            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Rol</th>
-            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Estado</th>
-            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Acciones</th>
+            <th className="px-8 py-5 text-[10px] font-black text-gray-600 uppercase tracking-widest">Nombre</th>
+            <th className="px-8 py-5 text-[10px] font-black text-gray-600 uppercase tracking-widest">Email</th>
+            <th className="px-8 py-5 text-[10px] font-black text-gray-600 uppercase tracking-widest">Rol</th>
+            <th className="px-8 py-5 text-[10px] font-black text-gray-600 uppercase tracking-widest text-center">Estado</th>
+            <th className="px-8 py-5 text-[10px] font-black text-gray-600 uppercase tracking-widest text-right">Acciones</th>
           </tr>
         </thead>
 
@@ -33,7 +33,7 @@ function UsersTable({ users, onEdit }) {
                   </div>
                   <div>
                     <p className="font-bold text-gray-800 text-sm leading-tight">{u.nombre}</p>
-                    <p className="text-[10px] font-bold text-gray-400 tracking-tighter mt-0.5">ID: #USER-{u.id}</p>
+                    <p className="text-[10px] font-bold text-gray-600 tracking-tighter mt-0.5">ID: #USER-{u.id}</p>
                   </div>
                 </div>
               </td>
@@ -77,7 +77,7 @@ function UsersTable({ users, onEdit }) {
 
       {/* Pagination Footer */}
       <div className="px-8 py-4 bg-gray-50/50 flex justify-between items-center border-t border-gray-50">
-        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Mostrando {users.length} de {users.length} usuarios</p>
+        <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest">Mostrando {users.length} de {users.length} usuarios</p>
         <div className="flex gap-2">
           <button className="p-1.5 bg-white border border-gray-100 rounded-lg text-gray-400 hover:text-indigo-600 transition-all cursor-pointer">
             <ChevronLeft size={16} />

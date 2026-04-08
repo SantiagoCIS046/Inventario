@@ -18,17 +18,24 @@ export default function InventoryRowPro({ product, onEdit, onDelete }) {
           </div>
           <div>
             <p className="text-[13px] font-black text-gray-900 leading-tight tracking-tight uppercase">{product.nombre}</p>
-            <p className="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tighter">Color: Indigo / Stitch</p>
+            <p className="text-[10px] font-bold text-gray-500 mt-1 uppercase tracking-tighter">Color: Indigo / Stitch</p>
           </div>
         </div>
       </td>
-      <td className="px-6 py-6 font-bold text-[10px] text-gray-400 uppercase tracking-widest">
+      <td className="px-6 py-6 font-bold text-[10px] text-gray-500 uppercase tracking-widest">
         {`SKU-${(product?.id || 0).toString().padStart(3, '0')}-PRO`}
       </td>
       <td className="px-6 py-6 text-center">
-        <span className="px-3 py-1 bg-indigo-50 text-indigo-600 text-[9px] font-black rounded-lg uppercase tracking-widest">
-          {product.categoria}
-        </span>
+        <div className="flex flex-col items-center gap-2">
+           <span className="px-3 py-1 bg-indigo-50 text-indigo-600 text-[9px] font-black rounded-lg uppercase tracking-widest">
+             {product.categoria}
+           </span>
+           {product.talla && (
+             <span className="text-[9px] font-black text-gray-400 uppercase tracking-tighter">
+                Talla: {product.talla}
+             </span>
+           )}
+        </div>
       </td>
       <td className="px-6 py-6 text-sm font-black text-gray-900 tracking-tighter text-center">
         ${(product?.precioVenta || 0).toLocaleString()}
@@ -39,7 +46,7 @@ export default function InventoryRowPro({ product, onEdit, onDelete }) {
             <span className={`text-[11px] font-black ${isLowStock ? "text-red-500" : "text-gray-900"}`}>
               {product.stock} u.
             </span>
-            <span className="text-[10px] font-bold text-gray-300">{Math.round(percentage)}%</span>
+            <span className="text-[10px] font-bold text-gray-500">{Math.round(percentage)}%</span>
           </div>
           <div className="h-1.5 w-full bg-gray-50 rounded-full overflow-hidden border border-gray-50">
              <div 

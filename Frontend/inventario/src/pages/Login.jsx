@@ -70,6 +70,7 @@ function Login() {
 
         <form
           onSubmit={handleSubmit}
+          autoComplete="off"
           className="bg-black/20 backdrop-blur-xl p-6 rounded-3xl border border-white/10 shadow-2xl shadow-black/40 space-y-4"
         >
           {isRegister && (
@@ -82,8 +83,10 @@ function Login() {
                   name="nombre"
                   type="text"
                   placeholder="Juan Pérez"
+                  value={form.nombre}
                   onChange={handleChange}
                   required
+                  autoComplete="off"
                   className="w-full bg-white/10 border border-white/5 rounded-2xl pl-4 pr-10 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:bg-white/20 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/20 transition-all font-medium"
                 />
                 <span className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 group-focus-within:text-white transition-colors">
@@ -102,7 +105,9 @@ function Login() {
                 name="email"
                 type="email"
                 placeholder="correo@ejemplo.com"
+                value={form.email}
                 onChange={handleChange}
+                autoComplete="off"
                 className="w-full bg-white/10 border border-white/5 rounded-2xl pl-4 pr-10 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:bg-white/20 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/20 transition-all font-medium"
               />
               <span className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 group-focus-within:text-white transition-colors">
@@ -127,8 +132,10 @@ function Login() {
                 name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
+                value={form.password}
                 onChange={handleChange}
                 required
+                autoComplete="new-password"
                 className="w-full bg-white/10 border border-white/5 rounded-2xl pl-4 pr-10 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:bg-white/20 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/20 transition-all font-medium font-mono tracking-widest"
               />
               <button 

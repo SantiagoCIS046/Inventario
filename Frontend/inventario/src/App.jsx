@@ -7,7 +7,7 @@ import Invoices from "./modules/invoices/pages/Invoices";
 import InvoiceDetail from "./modules/invoices/pages/InvoiceDetail";
 import CreateInvoice from "./modules/invoices/pages/CreateInvoice";
 import PredictiveDashboard from "./modules/reports/pages/PredictiveDashboard";
-import SalesPage from "./modules/sales/pages/SalesPage";
+import Ventas from "./pages/Ventas";
 import SalesHistoryPage from "./modules/sales/pages/SalesHistoryPage";
 import ReportsPage from "./modules/reports/pages/ReportsPage";
 import SuppliersPage from "./modules/suppliers/pages/SuppliersPage";
@@ -51,7 +51,7 @@ function App() {
           element={
             <PrivateRoute>
               <MainLayout>
-                <SalesPage />
+                <Ventas />
               </MainLayout>
             </PrivateRoute>
           } 

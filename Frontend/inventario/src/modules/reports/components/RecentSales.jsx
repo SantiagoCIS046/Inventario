@@ -1,5 +1,6 @@
 import React from "react";
 import { ArrowUpRight, ShoppingBag, Clock, XCircle } from "lucide-react";
+import { formatCurrency } from "../../../utils/formatters";
 
 export default function RecentSales({ sales }) {
   return (
@@ -41,7 +42,7 @@ export default function RecentSales({ sales }) {
                    <p className="text-[9px] font-bold text-gray-300 mt-1 uppercase">Hoy</p>
                 </td>
                 <td className="px-2 py-6 text-sm font-black text-gray-900 tracking-tighter">
-                   ${sale.total.toLocaleString()}
+                   {formatCurrency(sale.total)}
                 </td>
                 <td className="px-2 py-6 text-right">
                    <span className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest ${idx === 2 ? "bg-red-50 text-red-500 border border-red-100" : "bg-green-50 text-green-600 border border-green-100"}`}>

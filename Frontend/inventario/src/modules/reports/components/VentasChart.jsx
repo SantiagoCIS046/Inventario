@@ -1,4 +1,5 @@
 import React from "react";
+import { formatCurrency } from "../../../utils/formatters";
 
 export default function SalesChart({ data }) {
   if (!data || data.length === 0) return (
@@ -7,7 +8,7 @@ export default function SalesChart({ data }) {
      </div>
   );
 
-  const maxVal = Math.max(...data.map(d => d.total)) * 1.2 || 100;
+  const maxVal = Math.max(...data.map(d => Number(d.total || 0))) * 1.2 || 100;
   const height = 240;
   const width = 800;
   const barWidth = 40;
@@ -29,7 +30,8 @@ export default function SalesChart({ data }) {
       <div className="relative overflow-x-auto pb-4 custom-scrollbar">
         <svg height={height + 40} width={data.length * (barWidth + gap) + 60} className="mx-auto">
           {data.map((d, i) => {
-            const barHeight = (d.total / maxVal) * height;
+            const value = Number(d.total || 0);
+            const barHeight = (value / maxVal) * height;
             const x = i * (barWidth + gap) + 30;
             const y = height - barHeight + 20;
 
@@ -78,7 +80,7 @@ export default function SalesChart({ data }) {
                 </text>
 
                 {/* Value on Hover tooltip area */}
-                <title>{`Total: $${d.total.toLocaleString()}`}</title>
+                <title>{`Total: ${formatCurrency(d.total)}`}</title>
               </g>
             );
           })}

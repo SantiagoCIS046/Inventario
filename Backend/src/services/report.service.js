@@ -32,7 +32,7 @@ export const ingresosTotales = async (fechaInicio, fechaFin) => {
 };
 
 export const productosMasVendidos = async () => {
-  return await prisma.ventaDetalle.groupBy({
+  return await prisma.detalleVenta.groupBy({
     by: ["productoId"],
     _sum: {
       cantidad: true,
@@ -47,7 +47,7 @@ export const productosMasVendidos = async () => {
 };
 
 export const topProductos = async () => {
-  const data = await prisma.ventaDetalle.groupBy({
+  const data = await prisma.detalleVenta.groupBy({
     by: ["productoId"],
     _sum: { cantidad: true },
     orderBy: { _sum: { cantidad: "desc" } },
@@ -152,26 +152,28 @@ export const getAdvancedDashboardStats = async () => {
     };
   });
 
-  // 4. Ventas por día (última semana)
-  const chartData = await prisma.venta.groupBy({
-    by: ['createdAt'],
-    _sum: { total: true },
-    where: { createdAt: { gte: lastWeek } },
-    orderBy: { createdAt: 'asc' }
-  });
+  // 4. Ventas por día (última semana) - Agrupación mejorada por fecha
+  const rawChartData = await prisma.$queryRaw`
+    SELECT DATE_TRUNC('day', "createdAt") as date, SUM(total) as total
+    FROM "Venta"
+    WHERE "createdAt" >= ${lastWeek}
+    GROUP BY DATE_TRUNC('day', "createdAt")
+    ORDER BY date ASC
+  `;
 
-  const chartDataFormatted = chartData.map(d => ({
-    date: d.createdAt.toISOString().split('T')[0],
-    sales: d._sum.total
+  const chartDataFormatted = rawChartData.map(d => ({
+    date: new Date(d.date).toISOString().split('T')[0],
+    total: Number(d.total || 0)
   }));
 
   // 4. Top Productos
-  const topProductsRaw = await prisma.ventaDetalle.groupBy({
+  const topProductsRaw = await prisma.detalleVenta.groupBy({
     by: ["productoId"],
     _sum: { cantidad: true },
     orderBy: { _sum: { cantidad: "desc" } },
     take: 5
   });
+
 
   const topProducts = await Promise.all(
     topProductsRaw.map(async (p) => {
@@ -188,11 +190,11 @@ export const getAdvancedDashboardStats = async () => {
 
   return {
     metrics: {
-      todaySales: todaySales._sum.total || 0,
-      weeklySales: currentTotal,
+      todaySales: Number(todaySales._sum.total || 0),
+      weeklySales: Number(currentTotal),
       growth,
       avgTicket,
-      monthlyIncome: totalIncomeMonth._sum.total || 0,
+      monthlyIncome: Number(totalIncomeMonth._sum.total || 0),
       conversionRate: 4.82 // Simulado según diseño
     },
     stockAnalysis: stockAnalysis.sort((a, b) => a.daysLeft - b.daysLeft).slice(0, 6),
@@ -231,8 +233,8 @@ export const exportVentasExcel = async () => {
         ventaId: venta.id,
         producto: detalle.producto.nombre,
         cantidad: detalle.cantidad,
-        precio: detalle.precio,
-        total: detalle.cantidad * detalle.precio,
+        precio: detalle.precioUnitario,
+        total: detalle.cantidad * Number(detalle.precioUnitario),
         fecha: venta.createdAt,
       });
     });

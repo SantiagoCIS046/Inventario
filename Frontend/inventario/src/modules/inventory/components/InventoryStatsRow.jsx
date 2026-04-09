@@ -1,5 +1,6 @@
 import React from "react";
 import { DollarSign, AlertCircle, ShoppingBag, Package } from "lucide-react";
+import { formatCurrency } from "../../../utils/formatters";
 
 export default function InventoryStatsRow({ totalValue, lowStockCount, totalItems }) {
   return (
@@ -12,7 +13,7 @@ export default function InventoryStatsRow({ totalValue, lowStockCount, totalItem
          <div>
             <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest leading-none">Valor Total</p>
             <h4 className="text-2xl font-black text-indigo-900 tracking-tighter mt-1">
-               ${(totalValue || 0).toLocaleString()}
+               {formatCurrency(totalValue || 0)}
             </h4>
          </div>
       </div>

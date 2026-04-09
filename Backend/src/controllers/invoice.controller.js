@@ -1,4 +1,5 @@
-import * as salesService from "../services/sales.service.js";
+import * as salesService from "../services/venta.service.js";
+
 import { success } from "../utils/response.js";
 
 export const getInvoicesController = async (req, res, next) => {

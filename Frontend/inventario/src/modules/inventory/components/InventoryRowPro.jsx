@@ -1,5 +1,6 @@
 import React from "react";
 import { Edit2, Trash2, MoreHorizontal } from "lucide-react";
+import { formatCurrency } from "../../../utils/formatters";
 
 export default function InventoryRowPro({ product, onEdit, onDelete }) {
   const stock = product?.stock || 0;
@@ -38,7 +39,7 @@ export default function InventoryRowPro({ product, onEdit, onDelete }) {
         </div>
       </td>
       <td className="px-6 py-6 text-sm font-black text-gray-900 tracking-tighter text-center">
-        ${(product?.precioVenta || 0).toLocaleString()}
+        {formatCurrency(product?.precio || 0)}
       </td>
       <td className="px-4 py-3 min-w-[180px]">
         <div className="flex flex-col gap-2">

@@ -5,6 +5,7 @@ import SalesChart from "../modules/reports/components/VentasChart";
 import RecentSales from "../modules/reports/components/RecentSales";
 import StockAlerts from "../modules/reports/components/StockAlerts";
 import { Plus, Filter, Calendar, Diamond } from "lucide-react";
+import { formatCurrency } from "../utils/formatters";
 
 function Dashboard() {
   const [stats, setStats] = useState(null);
@@ -60,7 +61,7 @@ function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
         <StatCard 
           title="Ventas Totales" 
-          value={`$${stats?.summary?.ventasHoy?.toLocaleString() || '0'}`} 
+          value={formatCurrency(stats?.summary?.ventasHoy || 0)} 
           trend={12.5} 
           type="ventas" 
           color="indigo"
@@ -82,7 +83,7 @@ function Dashboard() {
         />
         <StatCard 
           title="Ingresos Mensuales" 
-          value={`$${stats?.summary?.ventasMes?.toLocaleString() || '0'}`} 
+          value={formatCurrency(stats?.summary?.ventasMes || 0)} 
           trend={2.1} 
           type="ingresos" 
           color="green"

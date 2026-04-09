@@ -2,6 +2,7 @@ import { fail } from "../utils/response.js";
 import { logError } from "../utils/logger.js";
 
 export const errorHandler = (err, req, res, next) => {
+  console.error('🔥 [ERROR-HANDLER]:', err);
   logError(err.message || err);
 
   const status = err.status || 500;

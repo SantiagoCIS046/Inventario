@@ -10,10 +10,12 @@ import PredictiveStockCard from "../components/PredictiveStockCard";
 import CriticalAlerts from "../components/CriticalAlerts";
 import SmartOrderBanner from "../components/SmartOrderBanner";
 import StatCard from "../components/StatCard";
+import { formatCurrency } from "../../../utils/formatters";
 
 export default function PredictiveDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("semana");
 
   useEffect(() => {
     api.get("/reports/dashboard").then(res => {
@@ -58,8 +60,16 @@ export default function PredictiveDashboard() {
       {/* Main Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
         <StatCard 
+          title="Venta Hoy" 
+          value={formatCurrency(data?.metrics.todaySales || 0)} 
+          trend={8.4} 
+          type="ingresos" 
+          color="indigo"
+          subtitle="Rendimiento diario"
+        />
+        <StatCard 
           title="Ventas 7 días" 
-          value={`$${data?.metrics.weeklySales.toLocaleString()}`} 
+          value={formatCurrency(data?.metrics.weeklySales)} 
           trend={14.2} 
           type="ventas" 
           color="indigo"
@@ -67,18 +77,10 @@ export default function PredictiveDashboard() {
         />
         <StatCard 
           title="Ticket Promedio" 
-          value={`$${Math.round(data?.metrics.avgTicket || 0)}`} 
+          value={formatCurrency(Math.round(data?.metrics.avgTicket || 0))} 
           type="facturas" 
           color="indigo"
-          subtitle="Estable"
-        />
-        <StatCard 
-          title="Ingresos Totales (Mes)" 
-          value={`$${(data?.metrics.monthlyIncome / 1000).toFixed(1)}k`} 
-          trend={8.1} 
-          type="ingresos" 
-          color="indigo"
-          subtitle="Octubre 2024"
+          subtitle="Promedio por factura"
         />
         <StatCard 
           title="Tasa de Conversión" 
@@ -97,11 +99,27 @@ export default function PredictiveDashboard() {
                <div className="flex justify-between items-center mb-12">
                   <div className="space-y-1">
                      <h2 className="text-3xl font-black text-gray-900 tracking-tighter">Ventas por Día</h2>
-                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Rendimiento omnicanal de la última semana</p>
+                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Rendimiento omnicanal de la {filter}</p>
                   </div>
                   <div className="flex gap-2 bg-gray-50 p-1.5 rounded-2xl border border-gray-100">
-                     <button className="px-6 py-2 rounded-xl text-[10px] font-black uppercase text-gray-400 hover:text-indigo-600 transition-all cursor-pointer">Semana</button>
-                     <button className="px-6 py-2 rounded-xl text-[10px] font-black uppercase bg-indigo-600 text-white shadow-lg shadow-indigo-100 cursor-pointer">Mes</button>
+                     <button 
+                       onClick={() => setFilter("hoy")}
+                       className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all cursor-pointer ${filter === 'hoy' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-gray-400 hover:text-indigo-600'}`}
+                     >
+                       Hoy
+                     </button>
+                     <button 
+                       onClick={() => setFilter("semana")}
+                       className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all cursor-pointer ${filter === 'semana' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-gray-400 hover:text-indigo-600'}`}
+                     >
+                       Semana
+                     </button>
+                     <button 
+                       onClick={() => setFilter("mes")}
+                       className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all cursor-pointer ${filter === 'mes' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-gray-400 hover:text-indigo-600'}`}
+                     >
+                       Mes
+                     </button>
                   </div>
                </div>
 

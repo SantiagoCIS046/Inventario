@@ -15,17 +15,20 @@ export const createProduct = async (data, userId) => {
   return product;
 };
 
-export const getProducts = async ({ page, limit, nombre }) => {
+export const getProducts = async ({ page, limit, nombre, codigoBarras }) => {
   const { skip, take } = getPagination(page, limit);
 
   const where = {
-    deletedAt: null, // Filtro de Soft Delete
+    deletedAt: null,
     ...(nombre && {
       nombre: {
         contains: nombre,
         mode: "insensitive",
       },
     }),
+    ...(codigoBarras && {
+      codigoBarras: codigoBarras
+    })
   };
 
   const [data, total] = await Promise.all([
@@ -79,3 +82,16 @@ export const deleteProduct = async (id, userId) => {
 
   return product;
 };
+
+export const getProductById = async (id) => {
+  const product = await prisma.producto.findUnique({
+    where: { id, deletedAt: null }
+  });
+
+  if (!product) {
+    throw new Error("Producto no encontrado");
+  }
+
+  return product;
+};
+

@@ -22,6 +22,7 @@ function Sidebar() {
 
   const menuItems = [
     { icon: <Package size={20} />, label: "Inventario", path: "/inventory" },
+    { icon: <ShoppingCart size={20} />, label: "Ventas (POS)", path: "/sales" },
     { icon: <Activity size={20} />, label: "Ventas Predictivas", path: "/predictive-sales" },
     { icon: <BarChart3 size={20} />, label: "Análisis y Reportes", path: "/reports" },
     { icon: <Truck size={20} />, label: "Proveedores", path: "/suppliers" },
@@ -29,16 +30,17 @@ function Sidebar() {
     { icon: <Megaphone size={20} />, label: "Marketing Digital", path: "/marketing" },
   ];
 
+
   return (
     <aside className="w-64 bg-white border-r border-gray-100 flex flex-col h-screen sticky top-0 animate-in slide-in-from-left duration-700">
       {/* Brand & Profile Header */}
       <div className="p-5 space-y-8">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-100">
-             <Diamond size={24} />
+          <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center overflow-hidden shadow-lg shadow-indigo-100 p-1">
+             <img src="/gestion-de-materiales.png" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <div>
-            <span className="text-xl font-black text-indigo-900 tracking-tighter block leading-none">StitchLogic</span>
+            <span className="text-xl font-black text-indigo-900 tracking-tighter block leading-none">Nexus POS</span>
             <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest mt-1 block">Nivel Empresarial</span>
           </div>
         </div>

@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import { X, Save, Camera, Barcode } from "lucide-react";
+import { formatInputNumber, cleanFormattedNumber } from "../../../utils/formatters";
 
 function ProductForm({ onClose, onSubmit, product }) {
   const [form, setForm] = useState({
     nombre: "",
     categoria: "",
-    precioCompra: "",
-    precioVenta: "",
+    precio: "",
     stock: "",
     talla: "",
+    codigoBarras: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -18,18 +19,25 @@ function ProductForm({ onClose, onSubmit, product }) {
       setForm({
         nombre: product.nombre || "",
         categoria: product.categoria || "",
-        precioCompra: product.precioCompra || "",
-        precioVenta: product.precioVenta || "",
+        precio: formatInputNumber(product.precio) || "",
         stock: product.stock || "",
         talla: product.talla || "",
+        codigoBarras: product.codigoBarras || "",
       });
     }
   }, [product]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    if (errors[e.target.name]) {
-      setErrors({ ...errors, [e.target.name]: "" });
+    let { name, value } = e.target;
+    
+    // Si es el campo de precio, aplicar formato de miles
+    if (name === "precio") {
+      value = formatInputNumber(value);
+    }
+    
+    setForm({ ...form, [name]: value });
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: "" });
     }
   };
 
@@ -37,7 +45,7 @@ function ProductForm({ onClose, onSubmit, product }) {
     const newErrors = {};
     if (!form.nombre.trim()) newErrors.nombre = "El nombre es requerido";
     if (!form.categoria) newErrors.categoria = "Selecciona una categoría";
-    if (!form.precioVenta || Number(form.precioVenta) <= 0) newErrors.precioVenta = "Ingresa un precio válido";
+    if (!form.precio || Number(form.precio) <= 0) newErrors.precio = "Ingresa un precio válido";
     if (!form.stock || Number(form.stock) < 0) newErrors.stock = "Ingresa un stock válido";
     return newErrors;
   };
@@ -52,10 +60,10 @@ function ProductForm({ onClose, onSubmit, product }) {
     onSubmit({
       nombre: form.nombre,
       categoria: form.categoria,
-      precioCompra: parseFloat(form.precioCompra) || 0,
-      precioVenta: parseFloat(form.precioVenta),
+      precio: cleanFormattedNumber(form.precio),
       stock: parseInt(form.stock),
       talla: form.talla,
+      codigoBarras: form.codigoBarras || null,
     });
   };
 
@@ -80,10 +88,10 @@ function ProductForm({ onClose, onSubmit, product }) {
         className="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-8 pb-2">
+        <div className="p-5 pb-2">
           <button
             onClick={onClose}
-            className="absolute top-6 right-6 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer"
+            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer"
           >
             <X size={20} />
           </button>
@@ -96,9 +104,9 @@ function ProductForm({ onClose, onSubmit, product }) {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 pt-6 space-y-5">
+        <form onSubmit={handleSubmit} className="p-5 pt-4 space-y-3.5">
           <div>
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex justify-between items-center mb-1">
               <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.15em]">Product Name</label>
               <span className="text-[10px] font-black text-red-500 uppercase tracking-wider">Required</span>
             </div>
@@ -107,34 +115,35 @@ function ProductForm({ onClose, onSubmit, product }) {
               value={form.nombre}
               onChange={handleChange}
               placeholder="Ej: Camisa Slim Fit Negra"
-              className={`w-full bg-gray-50 border ${errors.nombre ? 'border-red-300 ring-2 ring-red-50' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 transition-all`}
+              className={`w-full bg-gray-50 border ${errors.nombre ? 'border-red-300 ring-2 ring-red-50' : 'border-gray-200'} rounded-xl px-4 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 transition-all`}
             />
             {errors.nombre && <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">⊘ {errors.nombre}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-2">SKU</label>
+              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-1">Código de Barras / Escáner</label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-300">
                   <Barcode size={16} />
                 </span>
                 <input
-                  name="sku"
-                  value={product ? `SKU-${String(product.id).padStart(4, '0')}` : `INV-PR-${String(Math.floor(Math.random() * 999)).padStart(3, '0')}`}
-                  disabled
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm text-gray-400 font-mono cursor-not-allowed"
+                  name="codigoBarras"
+                  value={form.codigoBarras}
+                  onChange={handleChange}
+                  placeholder="Escanee o escriba..."
+                  className="w-full bg-indigo-50/50 border border-indigo-100 rounded-xl pl-10 pr-4 py-2 text-sm text-indigo-900 font-mono placeholder-indigo-300 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-2">Category</label>
+              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-1">Category</label>
               <select
                 name="categoria"
                 value={form.categoria}
                 onChange={handleChange}
-                className={`w-full bg-gray-50 border ${errors.categoria ? 'border-red-300' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm text-gray-700 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 cursor-pointer appearance-none transition-all`}
+                className={`w-full bg-gray-50 border ${errors.categoria ? 'border-red-300' : 'border-gray-200'} rounded-xl px-4 py-2 text-sm text-gray-700 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 cursor-pointer appearance-none transition-all`}
                 style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 14px center" }}
               >
                 <option value="">Seleccionar...</option>
@@ -148,14 +157,14 @@ function ProductForm({ onClose, onSubmit, product }) {
 
           {tallasDisponibles && (
             <div className="animate-in slide-in-from-top-2 duration-300">
-               <label className="block text-[10px] font-black text-blue-600 uppercase tracking-[0.15em] mb-3">Seleccionar Talla / Medida</label>
+               <label className="block text-[10px] font-black text-blue-600 uppercase tracking-[0.15em] mb-2">Seleccionar Talla / Medida</label>
                <div className="flex flex-wrap gap-2">
                   {tallasDisponibles.map((t) => (
                     <button
                       key={t}
                       type="button"
                       onClick={() => setForm({ ...form, talla: t })}
-                      className={`h-10 min-w-[3rem] px-3 rounded-xl text-[11px] font-black transition-all border-2 ${
+                      className={`h-8 min-w-[2.5rem] px-2 rounded-lg text-[10px] font-black transition-all border-2 ${
                         form.talla === t 
                           ? "bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-100" 
                           : "bg-white border-gray-100 text-gray-500 hover:border-blue-200"
@@ -170,22 +179,21 @@ function ProductForm({ onClose, onSubmit, product }) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-2">Price ($)</label>
+              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-1">Price ($)</label>
               <input
-                name="precioVenta"
-                type="number"
-                step="0.01"
-                min="0"
-                value={form.precioVenta}
+                name="precio"
+                type="text"
+                inputMode="numeric"
+                value={form.precio}
                 onChange={handleChange}
-                placeholder="0.00"
-                className={`w-full bg-gray-50 border ${errors.precioVenta ? 'border-red-300 ring-2 ring-red-50' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 transition-all`}
+                placeholder="0"
+                className={`w-full bg-gray-50 border ${errors.precio ? 'border-red-300 ring-2 ring-red-50' : 'border-gray-200'} rounded-xl px-4 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 transition-all`}
               />
-              {errors.precioVenta && <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">⊘ {errors.precioVenta}</p>}
+              {errors.precio && <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">⊘ {errors.precio}</p>}
             </div>
 
             <div>
-              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-2">Stock</label>
+              <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-1">Stock</label>
               <input
                 name="stock"
                 type="number"
@@ -193,20 +201,20 @@ function ProductForm({ onClose, onSubmit, product }) {
                 value={form.stock}
                 onChange={handleChange}
                 placeholder="0"
-                className={`w-full bg-gray-50 border ${errors.stock ? 'border-red-300 ring-2 ring-red-50' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 transition-all`}
+                className={`w-full bg-gray-50 border ${errors.stock ? 'border-red-300 ring-2 ring-red-50' : 'border-gray-200'} rounded-xl px-4 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-50 transition-all`}
               />
               {errors.stock && <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">⊘ {errors.stock}</p>}
             </div>
           </div>
 
           <div>
-            <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-2">Product Image (Optional)</label>
-            <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-blue-300 hover:bg-blue-50/30 transition-all cursor-pointer group">
-              <div className="w-12 h-12 mx-auto bg-blue-50 rounded-xl flex items-center justify-center text-blue-500 mb-3 group-hover:scale-110 transition-transform">
-                <Camera size={24} />
+            <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.15em] mb-1">Product Image (Optional)</label>
+            <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-blue-300 hover:bg-blue-50/30 transition-all cursor-pointer group">
+              <div className="w-8 h-8 mx-auto bg-blue-50 rounded-lg flex items-center justify-center text-blue-500 mb-2 group-hover:scale-110 transition-transform">
+                <Camera size={18} />
               </div>
-              <p className="text-sm text-gray-500 font-semibold">Click to upload or drag and drop</p>
-              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">PNG, JPG or WEBP (Max. 5MB)</p>
+              <p className="text-xs text-gray-500 font-semibold">Click to upload or drag and drop</p>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">PNG, JPG or WEBP (Max. 5MB)</p>
             </div>
           </div>
 
@@ -214,13 +222,13 @@ function ProductForm({ onClose, onSubmit, product }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 text-sm font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-colors cursor-pointer"
+              className="px-6 py-2 text-sm font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-blue-200 transition-all hover:scale-105 cursor-pointer"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-blue-200 transition-all hover:scale-105 cursor-pointer"
             >
               <Save size={16} />
               {product ? "Actualizar" : "Guardar"}

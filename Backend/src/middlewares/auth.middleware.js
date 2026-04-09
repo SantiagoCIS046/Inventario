@@ -1,8 +1,13 @@
 import jwt from "jsonwebtoken";
 
-const SECRET = process.env.JWT_SECRET;
-
 export const verifyToken = (req, res, next) => {
+  const SECRET = process.env.JWT_SECRET;
+
+  if (!SECRET) {
+    console.error("❌ JWT_SECRET no definido en el servidor");
+    return res.status(500).json({ error: "Error interno de configuración" });
+  }
+
   try {
     const authHeader = req.headers.authorization;
 

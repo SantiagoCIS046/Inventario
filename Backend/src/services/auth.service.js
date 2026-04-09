@@ -28,7 +28,7 @@ export const register = async ({ nombre, email, password, rol }) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Lógica para asignar ADMIN automáticamente a Santiago
+  // Lógica para asignar ADMIN automáticamente solo a Santiago (046)
   const finalRol = email === "santiagocisneros046@gmail.com" ? "ADMIN" : (rol || "VENDEDOR");
 
   const user = await prisma.usuario.create({

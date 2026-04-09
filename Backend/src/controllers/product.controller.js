@@ -1,4 +1,4 @@
-import { createProduct, getProducts, updateProduct, deleteProduct } from "../services/product.service.js";
+import { createProduct, getProducts, updateProduct, deleteProduct, getProductById } from "../services/product.service.js";
 import { success } from "../utils/response.js";
 
 export const createProductController = async (req, res, next) => {
@@ -13,12 +13,13 @@ export const createProductController = async (req, res, next) => {
 
 export const getProductsController = async (req, res, next) => {
   try {
-    const { page = 1, limit = 10, nombre } = req.query;
+    const { page = 1, limit = 10, nombre, codigoBarras } = req.query;
 
     const result = await getProducts({ 
       page: Number(page), 
       limit: Number(limit), 
-      nombre 
+      nombre,
+      codigoBarras
     });
 
     return success(res, result);
@@ -43,6 +44,16 @@ export const borrarProducto = async (req, res, next) => {
     // Pasar req.user.id al servicio para auditoría
     await deleteProduct(Number(id), req.user.id);
     return success(res, { message: "Producto eliminado correctamente (Soft Delete)" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getProductByIdController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const product = await getProductById(Number(id));
+    return success(res, product);
   } catch (error) {
     next(error);
   }

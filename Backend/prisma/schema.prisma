@@ -8,16 +8,16 @@ datasource db {
 
 model Producto {
   id           Int                    @id @default(autoincrement())
+  codigoBarras String?                @unique
   nombre       String
   categoria    String
-  precioCompra Float
-  precioVenta  Float
+  precio       Decimal
   stock        Int
-  talla        String?                // Nuevo campo para tallas (calzado/ropa)
+  talla        String?
   createdAt    DateTime               @default(now())
   deletedAt    DateTime?
   movimientos  MovimientoInventario[]
-  ventas       VentaDetalle[]
+  ventas       DetalleVenta[]
 
   @@index([createdAt])
 }
@@ -37,20 +37,22 @@ model MovimientoInventario {
 }
 
 model Venta {
-  id        Int           @id @default(autoincrement())
-  total     Float
-  createdAt DateTime      @default(now())
-  detalles  VentaDetalle[]
+  id           Int             @id @default(autoincrement())
+  total        Decimal
+  metodoPago   MetodoPago
+  createdAt    DateTime        @default(now())
+  detalles     DetalleVenta[]
 
   @@index([createdAt])
 }
 
-model VentaDetalle {
-  id         Int      @id @default(autoincrement())
-  ventaId    Int
-  productoId Int
-  cantidad   Int
-  precio     Float
+model DetalleVenta {
+  id              Int       @id @default(autoincrement())
+  ventaId         Int
+  productoId      Int
+  cantidad        Int
+  precioUnitario  Decimal
+  subtotal        Decimal
 
   venta      Venta    @relation(fields: [ventaId], references: [id])
   producto   Producto @relation(fields: [productoId], references: [id])
@@ -78,5 +80,10 @@ model Auditoria {
   entidadId Int
   createdAt DateTime @default(now())
 
-  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+}
+
+enum MetodoPago {
+  efectivo
+  transferencia
 }

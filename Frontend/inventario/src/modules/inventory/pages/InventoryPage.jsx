@@ -6,6 +6,8 @@ import InventoryStatsRow from "../components/InventoryStatsRow";
 import ProductForm from "../components/ProductForm";
 import { useAuthStore } from "../../../store/useAuthStore";
 
+const CATEGORIES = ["Camisas", "Oversize", "Jeans", "Cargo", "Pantalonetas", "Shorts", "Zapatos", "Gorras", "Polos", "Otros"];
+
 function InventoryPage() {
   const { user } = useAuthStore();
   const [products, setProducts] = useState([]);
@@ -48,7 +50,7 @@ function InventoryPage() {
   }, [products, filters]);
 
   const stats = useMemo(() => {
-    const totalValue = products.reduce((sum, p) => sum + ((p?.precioVenta || 0) * (p?.stock || 0)), 0);
+    const totalValue = products.reduce((sum, p) => sum + ((p?.precio || 0) * (p?.stock || 0)), 0);
     const lowStockCount = products.filter(p => (p?.stock || 0) < 10).length;
     return { totalValue, lowStockCount, totalItems: products.length };
   }, [products]);
@@ -115,7 +117,7 @@ function InventoryPage() {
                   value={filters.category}
                >
                   <option value="all">Todas las Categorías</option>
-                  {[...new Set(products.filter(p => p?.categoria).map(p => p.categoria))].map(cat => (
+                  {CATEGORIES.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
                </select>
